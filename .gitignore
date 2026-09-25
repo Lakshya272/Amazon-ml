@@ -1,4 +1,4 @@
-﻿# Python
+# Python
 __pycache__/
 *.py[cod]
 .venv/
@@ -10,6 +10,10 @@ data/
 *.csv
 *.parquet
 *.jsonl
+*.zip
+*.tar.gz
+*.tar
+dataset.zip
 
 # ML outputs / generated artifacts
 outputs/*
