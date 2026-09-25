@@ -1,0 +1,30 @@
+﻿# Python
+__pycache__/
+*.py[cod]
+.venv/
+venv/
+
+# Challenge data / large files
+data/
+*.tsv
+*.csv
+*.parquet
+*.jsonl
+
+# ML outputs / generated artifacts
+outputs/*
+models/
+checkpoints/
+embeddings/
+
+# AWS / secrets
+.env
+*.pem
+.aws/
+
+# macOS junk
+__MACOSX/
+.DS_Store
+
+# IDE
+.vscode/
