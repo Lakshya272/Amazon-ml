@@ -1,0 +1,163 @@
+[
+  {
+    "channel": "Channel_A_ExactLegalName",
+    "candidate_recall": 0.235633,
+    "candidate_recall_pct": 23.56,
+    "recovered_links": 1799853,
+    "total_true_links": 7638365,
+    "total_candidate_pairs": 16343691,
+    "avg_candidates_per_s1": 7.41,
+    "median_candidates_per_s1": 1,
+    "p95_candidates_per_s1": 50,
+    "max_candidates_per_s1": 50,
+    "zero_candidate_s1_pct": 25.79,
+    "breakdown": {
+      "recovered_s2_pct": 49.05,
+      "recovered_s3_pct": 50.95,
+      "recovered_us_pct": 63.93,
+      "recovered_in_pct": 36.07,
+      "pairs_s2": 9572572,
+      "pairs_s3": 6771119,
+      "pairs_us": 10317428,
+      "pairs_in": 6026263
+    }
+  },
+  {
+    "channel": "Channel_B_SharedNameTokens",
+    "candidate_recall": 0.119464,
+    "candidate_recall_pct": 11.95,
+    "recovered_links": 912508,
+    "total_true_links": 7638365,
+    "total_candidate_pairs": 9672321,
+    "avg_candidates_per_s1": 4.38,
+    "median_candidates_per_s1": 0,
+    "p95_candidates_per_s1": 25,
+    "max_candidates_per_s1": 75,
+    "zero_candidate_s1_pct": 79.98,
+    "breakdown": {
+      "recovered_s2_pct": 63.17,
+      "recovered_s3_pct": 36.83,
+      "recovered_us_pct": 53.71,
+      "recovered_in_pct": 46.29,
+      "pairs_s2": 7552565,
+      "pairs_s3": 2119756,
+      "pairs_us": 5113973,
+      "pairs_in": 4558348
+    }
+  },
+  {
+    "channel": "Channel_C_AddressDerived",
+    "candidate_recall": 0.460954,
+    "candidate_recall_pct": 46.1,
+    "recovered_links": 3520934,
+    "total_true_links": 7638365,
+    "total_candidate_pairs": 18946710,
+    "avg_candidates_per_s1": 8.59,
+    "median_candidates_per_s1": 4,
+    "p95_candidates_per_s1": 25,
+    "max_candidates_per_s1": 50,
+    "zero_candidate_s1_pct": 11.39,
+    "breakdown": {
+      "recovered_s2_pct": 51.04,
+      "recovered_s3_pct": 48.96,
+      "recovered_us_pct": 70.99,
+      "recovered_in_pct": 29.01,
+      "pairs_s2": 13813403,
+      "pairs_s3": 5133307,
+      "pairs_us": 8089692,
+      "pairs_in": 10857018
+    }
+  },
+  {
+    "channel": "Channel_D_NgramSignature",
+    "candidate_recall": 0.000784,
+    "candidate_recall_pct": 0.08,
+    "recovered_links": 5992,
+    "total_true_links": 7638365,
+    "total_candidate_pairs": 41969,
+    "avg_candidates_per_s1": 0.02,
+    "median_candidates_per_s1": 0,
+    "p95_candidates_per_s1": 0,
+    "max_candidates_per_s1": 25,
+    "zero_candidate_s1_pct": 99.88,
+    "breakdown": {
+      "recovered_s2_pct": 56.64,
+      "recovered_s3_pct": 43.36,
+      "recovered_us_pct": 60.33,
+      "recovered_in_pct": 39.67,
+      "pairs_s2": 29615,
+      "pairs_s3": 12354,
+      "pairs_us": 25500,
+      "pairs_in": 16469
+    }
+  },
+  {
+    "channel": "Union_A_B",
+    "candidate_recall": 0.318983,
+    "candidate_recall_pct": 31.9,
+    "recovered_links": 2436507,
+    "total_true_links": 7638365,
+    "total_candidate_pairs": 25655887,
+    "avg_candidates_per_s1": 11.63,
+    "median_candidates_per_s1": 3,
+    "p95_candidates_per_s1": 50,
+    "max_candidates_per_s1": 77,
+    "zero_candidate_s1_pct": 18.61,
+    "breakdown": {
+      "recovered_s2_pct": 52.77,
+      "recovered_s3_pct": 47.23,
+      "recovered_us_pct": 61.27,
+      "recovered_in_pct": 38.73,
+      "pairs_s2": 16890785,
+      "pairs_s3": 8765102,
+      "pairs_us": 15226570,
+      "pairs_in": 10429317
+    }
+  },
+  {
+    "channel": "Union_A_B_C",
+    "candidate_recall": 0.63231,
+    "candidate_recall_pct": 63.23,
+    "recovered_links": 4829814,
+    "total_true_links": 7638365,
+    "total_candidate_pairs": 43460695,
+    "avg_candidates_per_s1": 19.69,
+    "median_candidates_per_s1": 16,
+    "p95_candidates_per_s1": 52,
+    "max_candidates_per_s1": 114,
+    "zero_candidate_s1_pct": 2.93,
+    "breakdown": {
+      "recovered_s2_pct": 50.6,
+      "recovered_s3_pct": 49.4,
+      "recovered_us_pct": 66.04,
+      "recovered_in_pct": 33.96,
+      "pairs_s2": 30054830,
+      "pairs_s3": 13405865,
+      "pairs_us": 22511546,
+      "pairs_in": 20949149
+    }
+  },
+  {
+    "channel": "Union_A_B_C_D",
+    "candidate_recall": 0.632382,
+    "candidate_recall_pct": 63.24,
+    "recovered_links": 4830368,
+    "total_true_links": 7638365,
+    "total_candidate_pairs": 43474001,
+    "avg_candidates_per_s1": 19.7,
+    "median_candidates_per_s1": 16,
+    "p95_candidates_per_s1": 52,
+    "max_candidates_per_s1": 114,
+    "zero_candidate_s1_pct": 2.93,
+    "breakdown": {
+      "recovered_s2_pct": 50.6,
+      "recovered_s3_pct": 49.4,
+      "recovered_us_pct": 66.04,
+      "recovered_in_pct": 33.96,
+      "pairs_s2": 30064485,
+      "pairs_s3": 13409516,
+      "pairs_us": 22521110,
+      "pairs_in": 20952891
+    }
+  }
+]

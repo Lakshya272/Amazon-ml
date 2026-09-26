@@ -1,0 +1,268 @@
+[
+  {
+    "channel": "Baseline_A_B_C",
+    "candidate_recall": 0.629892,
+    "candidate_recall_pct": 62.99,
+    "recovered_links": 4811348,
+    "total_true_links": 7638365,
+    "total_candidate_pairs": 41874576,
+    "avg_candidates_per_s1": 18.98,
+    "median_candidates_per_s1": 14,
+    "p95_candidates_per_s1": 52,
+    "max_candidates_per_s1": 106,
+    "zero_candidate_s1_pct": 3.08,
+    "breakdown": {
+      "recovered_s2_pct": 50.42,
+      "recovered_s3_pct": 49.58,
+      "recovered_us_pct": 66.09,
+      "recovered_in_pct": 33.91
+    }
+  },
+  {
+    "channel": "Channel_D_RelaxedCharNgram",
+    "candidate_recall": 0.05208,
+    "candidate_recall_pct": 5.21,
+    "recovered_links": 397807,
+    "total_true_links": 7638365,
+    "total_candidate_pairs": 3929610,
+    "avg_candidates_per_s1": 1.78,
+    "median_candidates_per_s1": 0,
+    "p95_candidates_per_s1": 22,
+    "max_candidates_per_s1": 68,
+    "zero_candidate_s1_pct": 92.3,
+    "breakdown": {
+      "recovered_s2_pct": 57.53,
+      "recovered_s3_pct": 42.47,
+      "recovered_us_pct": 51.38,
+      "recovered_in_pct": 48.62
+    }
+  },
+  {
+    "channel": "Channel_E_Word_TFIDF_Top10",
+    "candidate_recall": 0.068776,
+    "candidate_recall_pct": 6.88,
+    "recovered_links": 525335,
+    "total_true_links": 7638365,
+    "total_candidate_pairs": 3628285,
+    "avg_candidates_per_s1": 1.64,
+    "median_candidates_per_s1": 0,
+    "p95_candidates_per_s1": 10,
+    "max_candidates_per_s1": 10,
+    "zero_candidate_s1_pct": 82.58,
+    "breakdown": {
+      "recovered_s2_pct": 72.12,
+      "recovered_s3_pct": 27.88,
+      "recovered_us_pct": 55.81,
+      "recovered_in_pct": 44.19
+    }
+  },
+  {
+    "channel": "Channel_E_Word_TFIDF_Top20",
+    "candidate_recall": 0.102173,
+    "candidate_recall_pct": 10.22,
+    "recovered_links": 780434,
+    "total_true_links": 7638365,
+    "total_candidate_pairs": 6575448,
+    "avg_candidates_per_s1": 2.98,
+    "median_candidates_per_s1": 0,
+    "p95_candidates_per_s1": 20,
+    "max_candidates_per_s1": 20,
+    "zero_candidate_s1_pct": 82.58,
+    "breakdown": {
+      "recovered_s2_pct": 63.78,
+      "recovered_s3_pct": 36.22,
+      "recovered_us_pct": 53.99,
+      "recovered_in_pct": 46.01
+    }
+  },
+  {
+    "channel": "Channel_F_Char_TFIDF_Top5",
+    "candidate_recall": 0.020939,
+    "candidate_recall_pct": 2.09,
+    "recovered_links": 159939,
+    "total_true_links": 7638365,
+    "total_candidate_pairs": 844587,
+    "avg_candidates_per_s1": 0.38,
+    "median_candidates_per_s1": 0,
+    "p95_candidates_per_s1": 5,
+    "max_candidates_per_s1": 5,
+    "zero_candidate_s1_pct": 92.3,
+    "breakdown": {
+      "recovered_s2_pct": 75.41,
+      "recovered_s3_pct": 24.59,
+      "recovered_us_pct": 52.3,
+      "recovered_in_pct": 47.7
+    }
+  },
+  {
+    "channel": "Channel_F_Char_TFIDF_Top10",
+    "candidate_recall": 0.033147,
+    "candidate_recall_pct": 3.31,
+    "recovered_links": 253190,
+    "total_true_links": 7638365,
+    "total_candidate_pairs": 1654591,
+    "avg_candidates_per_s1": 0.75,
+    "median_candidates_per_s1": 0,
+    "p95_candidates_per_s1": 10,
+    "max_candidates_per_s1": 10,
+    "zero_candidate_s1_pct": 92.3,
+    "breakdown": {
+      "recovered_s2_pct": 68.35,
+      "recovered_s3_pct": 31.65,
+      "recovered_us_pct": 51.61,
+      "recovered_in_pct": 48.39
+    }
+  },
+  {
+    "channel": "Channel_F_Char_TFIDF_Top20",
+    "candidate_recall": 0.047496,
+    "candidate_recall_pct": 4.75,
+    "recovered_links": 362788,
+    "total_true_links": 7638365,
+    "total_candidate_pairs": 3075350,
+    "avg_candidates_per_s1": 1.39,
+    "median_candidates_per_s1": 0,
+    "p95_candidates_per_s1": 20,
+    "max_candidates_per_s1": 20,
+    "zero_candidate_s1_pct": 92.3,
+    "breakdown": {
+      "recovered_s2_pct": 59.79,
+      "recovered_s3_pct": 40.21,
+      "recovered_us_pct": 51.55,
+      "recovered_in_pct": 48.45
+    }
+  },
+  {
+    "channel": "Channel_F_Char_TFIDF_Top50",
+    "candidate_recall": 0.061532,
+    "candidate_recall_pct": 6.15,
+    "recovered_links": 470005,
+    "total_true_links": 7638365,
+    "total_candidate_pairs": 5471433,
+    "avg_candidates_per_s1": 2.48,
+    "median_candidates_per_s1": 0,
+    "p95_candidates_per_s1": 24,
+    "max_candidates_per_s1": 50,
+    "zero_candidate_s1_pct": 92.3,
+    "breakdown": {
+      "recovered_s2_pct": 49.51,
+      "recovered_s3_pct": 50.49,
+      "recovered_us_pct": 52.25,
+      "recovered_in_pct": 47.75
+    }
+  },
+  {
+    "channel": "Union_ABC_plus_RelaxedNgram",
+    "candidate_recall": 0.635542,
+    "candidate_recall_pct": 63.55,
+    "recovered_links": 4854500,
+    "total_true_links": 7638365,
+    "total_candidate_pairs": 43974983,
+    "avg_candidates_per_s1": 19.93,
+    "median_candidates_per_s1": 16,
+    "p95_candidates_per_s1": 53,
+    "max_candidates_per_s1": 120,
+    "zero_candidate_s1_pct": 2.95,
+    "breakdown": {
+      "recovered_s2_pct": 50.42,
+      "recovered_s3_pct": 49.58,
+      "recovered_us_pct": 65.93,
+      "recovered_in_pct": 34.07
+    }
+  },
+  {
+    "channel": "Union_ABC_plus_CharTFIDF_Top10",
+    "candidate_recall": 0.633075,
+    "candidate_recall_pct": 63.31,
+    "recovered_links": 4835656,
+    "total_true_links": 7638365,
+    "total_candidate_pairs": 42607634,
+    "avg_candidates_per_s1": 19.31,
+    "median_candidates_per_s1": 15,
+    "p95_candidates_per_s1": 52,
+    "max_candidates_per_s1": 106,
+    "zero_candidate_s1_pct": 2.95,
+    "breakdown": {
+      "recovered_s2_pct": 50.49,
+      "recovered_s3_pct": 49.51,
+      "recovered_us_pct": 66.01,
+      "recovered_in_pct": 33.99
+    }
+  },
+  {
+    "channel": "Union_ABC_plus_CharTFIDF_Top20",
+    "candidate_recall": 0.6348,
+    "candidate_recall_pct": 63.48,
+    "recovered_links": 4848831,
+    "total_true_links": 7638365,
+    "total_candidate_pairs": 43393850,
+    "avg_candidates_per_s1": 19.66,
+    "median_candidates_per_s1": 16,
+    "p95_candidates_per_s1": 52,
+    "max_candidates_per_s1": 109,
+    "zero_candidate_s1_pct": 2.95,
+    "breakdown": {
+      "recovered_s2_pct": 50.44,
+      "recovered_s3_pct": 49.56,
+      "recovered_us_pct": 65.96,
+      "recovered_in_pct": 34.04
+    }
+  },
+  {
+    "channel": "Union_ABC_plus_CharTFIDF_Top50",
+    "candidate_recall": 0.638238,
+    "candidate_recall_pct": 63.82,
+    "recovered_links": 4875093,
+    "total_true_links": 7638365,
+    "total_candidate_pairs": 45344089,
+    "avg_candidates_per_s1": 20.55,
+    "median_candidates_per_s1": 16,
+    "p95_candidates_per_s1": 54,
+    "max_candidates_per_s1": 128,
+    "zero_candidate_s1_pct": 2.95,
+    "breakdown": {
+      "recovered_s2_pct": 50.22,
+      "recovered_s3_pct": 49.78,
+      "recovered_us_pct": 65.82,
+      "recovered_in_pct": 34.18
+    }
+  },
+  {
+    "channel": "Full_Frontier_ABC_Ngram_CharTFIDF_Top20",
+    "candidate_recall": 0.635624,
+    "candidate_recall_pct": 63.56,
+    "recovered_links": 4855128,
+    "total_true_links": 7638365,
+    "total_candidate_pairs": 44064738,
+    "avg_candidates_per_s1": 19.97,
+    "median_candidates_per_s1": 16,
+    "p95_candidates_per_s1": 53,
+    "max_candidates_per_s1": 120,
+    "zero_candidate_s1_pct": 2.95,
+    "breakdown": {
+      "recovered_s2_pct": 50.41,
+      "recovered_s3_pct": 49.59,
+      "recovered_us_pct": 65.93,
+      "recovered_in_pct": 34.07
+    }
+  },
+  {
+    "channel": "Full_Frontier_ABC_Ngram_CharTFIDF_Top50",
+    "candidate_recall": 0.638259,
+    "candidate_recall_pct": 63.83,
+    "recovered_links": 4875254,
+    "total_true_links": 7638365,
+    "total_candidate_pairs": 45394135,
+    "avg_candidates_per_s1": 20.57,
+    "median_candidates_per_s1": 16,
+    "p95_candidates_per_s1": 54,
+    "max_candidates_per_s1": 132,
+    "zero_candidate_s1_pct": 2.95,
+    "breakdown": {
+      "recovered_s2_pct": 50.22,
+      "recovered_s3_pct": 49.78,
+      "recovered_us_pct": 65.82,
+      "recovered_in_pct": 34.18
+    }
+  }
+]
