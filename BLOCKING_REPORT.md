@@ -1,50 +1,31 @@
-# Blocking & Candidate Generation Benchmark Report — Phase 2 Extended
+# Blocking & Candidate Generation Benchmark Pointer
 
-**Generated:** 2026-09-26 05:13:37 UTC  
-**Evaluated on Full Ground Truth:** 2,206,821 Source 1 Entities, 7,638,365 True Links  
-**Total Execution Runtime:** 959.09s (~16.0 min)  
+> **NOTE:** This file has been superseded by the canonical benchmark reports produced from the full ground-truth evaluations:
+> 
+> - **Canonical Nested Union Benchmark Report (EXP-005):** [`outputs/blocking/BLOCKING_NESTED_UNION_REPORT.md`](file:///outputs/blocking/BLOCKING_NESTED_UNION_REPORT.md)
+> - **Raw Machine-Readable JSON Output:** [`outputs/blocking/blocking_nested_union_benchmark.json`](file:///outputs/blocking/blocking_nested_union_benchmark.json)
+> - **Full Experiment History & Findings:** [`EXPERIMENT_JOURNEY.md`](file:///EXPERIMENT_JOURNEY.md)
+> - **Thin Supervised Matcher Pipeline Report (EXP-006):** [`outputs/matcher/MATCHER_VALIDATION_REPORT.md`](file:///outputs/matcher/MATCHER_VALIDATION_REPORT.md)
 
-## 1. Candidate Generation Recall-vs-Volume Frontier
+## Summary of Canonical Classical Blocking Baseline (EXP-005)
 
-| Strategy / Channel | Candidate Recall (%) | Total Candidate Pairs | Avg Cands / S1 | Median | P95 | Max | Rec S2 (%) | Rec S3 (%) | Rec US (%) | Rec IN (%) |
+Evaluated over **2,206,821 Source 1 entities** and **7,638,365 true links**:
+
+| Union | Link Recall (%) | Full Cov (%) | Zero Cov (%) | Total Cands | Avg/S1 | P95 | Rec S2 | Rec S3 | Rec US | Rec IN |
 |---|---|---|---|---|---|---|---|---|---|---|
-| `Baseline_A_B_C` | **62.99%** | 41,874,576 | 18.98 | 14 | 52 | 106 | 50.42% | 49.58% | 66.09% | 33.91% |
-| `Channel_D_RelaxedCharNgram` | **5.21%** | 3,929,610 | 1.78 | 0 | 22 | 68 | 57.53% | 42.47% | 51.38% | 48.62% |
-| `Channel_E_Word_TFIDF_Top10` | **6.88%** | 3,628,285 | 1.64 | 0 | 10 | 10 | 72.12% | 27.88% | 55.81% | 44.19% |
-| `Channel_E_Word_TFIDF_Top20` | **10.22%** | 6,575,448 | 2.98 | 0 | 20 | 20 | 63.78% | 36.22% | 53.99% | 46.01% |
-| `Channel_F_Char_TFIDF_Top5` | **2.09%** | 844,587 | 0.38 | 0 | 5 | 5 | 75.41% | 24.59% | 52.3% | 47.7% |
-| `Channel_F_Char_TFIDF_Top10` | **3.31%** | 1,654,591 | 0.75 | 0 | 10 | 10 | 68.35% | 31.65% | 51.61% | 48.39% |
-| `Channel_F_Char_TFIDF_Top20` | **4.75%** | 3,075,350 | 1.39 | 0 | 20 | 20 | 59.79% | 40.21% | 51.55% | 48.45% |
-| `Channel_F_Char_TFIDF_Top50` | **6.15%** | 5,471,433 | 2.48 | 0 | 24 | 50 | 49.51% | 50.49% | 52.25% | 47.75% |
-| `Union_ABC_plus_RelaxedNgram` | **63.55%** | 43,974,983 | 19.93 | 16 | 53 | 120 | 50.42% | 49.58% | 65.93% | 34.07% |
-| `Union_ABC_plus_CharTFIDF_Top10` | **63.31%** | 42,607,634 | 19.31 | 15 | 52 | 106 | 50.49% | 49.51% | 66.01% | 33.99% |
-| `Union_ABC_plus_CharTFIDF_Top20` | **63.48%** | 43,393,850 | 19.66 | 16 | 52 | 109 | 50.44% | 49.56% | 65.96% | 34.04% |
-| `Union_ABC_plus_CharTFIDF_Top50` | **63.82%** | 45,344,089 | 20.55 | 16 | 54 | 128 | 50.22% | 49.78% | 65.82% | 34.18% |
-| `Full_Frontier_ABC_Ngram_CharTFIDF_Top20` | **63.56%** | 44,064,738 | 19.97 | 16 | 53 | 120 | 50.41% | 49.59% | 65.93% | 34.07% |
-| `Full_Frontier_ABC_Ngram_CharTFIDF_Top50` | **63.83%** | 45,394,135 | 20.57 | 16 | 54 | 132 | 50.22% | 49.78% | 65.82% | 34.18% |
+| `A` | **23.01%** | 8.37% | 40.65% | 13,264,157 | 6.01 | 30 | 23.51% | 22.54% | 24.25% | 21.15% |
+| `A+B` | **28.99%** | 12.26% | 36.00% | 18,378,813 | 8.33 | 30 | 32.03% | 26.15% | 29.71% | 27.93% |
+| `A+B+C` | **60.61%** | 33.61% | 12.24% | 31,456,529 | 14.25 | 36 | 64.01% | 57.42% | 67.56% | 50.20% |
+| `A+B+C+D` | **60.63%** | 33.67% | 12.23% | 31,550,537 | 14.30 | 36 | 64.04% | 57.44% | 67.57% | 50.25% |
+| `A+B+C+D+E` | **71.28%** | 45.72% | 7.42% | 54,856,119 | 24.86 | 53 | 74.83% | 67.95% | 78.53% | 60.43% |
+| `A+B+C+D+E+F` | **73.00%** | 47.46% | 6.45% | 114,837,298 | 52.04 | 81 | 76.90% | 69.34% | 78.82% | 64.29% |
+| `A+B+C+D+E+F+G` | **76.34%** | 52.86% | 5.54% | 131,123,278 | 59.42 | 92 | 80.36% | 72.57% | 81.64% | 68.41% |
 
-## 2. In-Depth Channel Observations
-
-### A. Baseline (`A+B+C`)
-- **Recall:** 63.23% (4.83M true links) at **19.69 avg candidates/S1**.
-- Established standard combining exact legal names, rare name tokens, and address geographic keys.
-
-### B. Relaxed Character N-Gram Inverted Index (`Channel_D_RelaxedCharNgram`)
-- Moving from restrictive paired first+last 3-grams to individual selective 3-gram and 4-gram keys increased recall while bounding bucket depth to selective IDF thresholds.
-
-### C. Character TF-IDF Retrieval (`Channel_F_Char_TFIDF`)
-- Testing Top-K retrieval (K=5, 10, 20, 50) directly explores the precision-recall trade-off.
-- Character TF-IDF recovers fuzzy spelling errors, typos, transliterated suffixes, and slight formatting differences without Cartesian explosion.
-
-### D. Candidate Recall Frontiers (Unions against A+B+C)
-- **`Union_ABC_plus_CharTFIDF_Top20`:** Balances high recall with a practical pairwise comparison volume.
-- **`Full_Frontier_ABC_Ngram_CharTFIDF_Top50`:** Represents the maximum reachable recall ceiling for candidate generation.
-
-## 3. Best 3 Recommended Blocking Configurations
-
-1. **`Full_Frontier_ABC_Ngram_CharTFIDF_Top20` (Best Production Frontier):**
-   - Achieves superior candidate recall over the 63.23% baseline while keeping candidates per S1 tightly bounded for pairwise classifier training.
-2. **`Union_ABC_plus_CharTFIDF_Top10` (High-Throughput Configuration):**
-   - Minimal candidate overhead, ultra-fast feature computation, and strong recall boost.
-3. **`Baseline_A_B_C` (Fast Structural Baseline):**
-   - 63.23% recall, 19.69 cands/S1. Pure lexical + address matching without top-K scoring passes.
+Where:
+- **A**: Exact legal-normalized business name
+- **B**: Informative rare name tokens (IDF-filtered)
+- **C**: Address-derived keys (postal code, building/house number + first street token)
+- **D**: Selective character 3-grams
+- **E**: Drop-one token name keys (for names $\ge 3$ tokens)
+- **F**: Address component-drop keys (2nd/3rd address tokens)
+- **G**: Sorted neighborhood / prefix key (first 8 chars of normalized name)
