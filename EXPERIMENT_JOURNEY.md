@@ -130,5 +130,57 @@
   - `Qwen/Qwen3-Embedding-0.6B`: 1024-d, 3.4 GB VRAM, 492.4 texts/sec.
   - Native PyTorch CUDA Top-K vector retrieval: **2,040 qps** over 10,000 vectors.
 
+---
+
+## EXP-007: Addressing Address Locality (Channels H & I) and Deterministic Indic Transliteration (Channel J)
+- **Commit:** `9906305`
+- **Scope:** 
+  1. Attack Address Variation / Alternate Locality (54.6% of EXP-006 misses):
+     - **Channel H (`extract_numeric_address_keys`)**: Decoupled numeric retrieval pairing house/building numbers with 3-digit and 5-digit postal prefixes.
+     - **Channel I (`extract_landmark_address_keys`)**: Regex-based landmark extractor (`near`, `opp`, `behind`, etc.) and relaxed address edge tokens (first + last significant tokens).
+  2. Attack Multilingual / Transliteration (27.8% of EXP-006 misses):
+     - **Channel J (`extract_transliterated_keys`)**: Implemented deterministic Unicode block mapping for Devanagari, Bengali, Tamil, and Telugu to Latin phonetics (strictly 0 external lookup, fair-play compliant).
+  3. Integrated official Oracle Matcher Macro $F_{0.5}$ ceiling evaluation on full ground truth (50,000 S1 validation sample, 172,731 links).
+- **Benchmark Results Across Nested Candidate Unions:**
+
+| Union | Link Recall (%) | Oracle Macro F0.5 | Full Cov (%) | Zero Cov (%) | Total Cands | Avg/S1 | Med | P95 | P99 | Max | Rec S2 | Rec S3 | Rec US | Rec IN |
+|---|---|---|---|---|---|---|---|---|---|---|---|---|---|---|
+| `A-G` Baseline | 76.28% | 0.8856 | 52.99% | 5.56% | 2,969,002 | 59.38 | 58 | 92 | 104 | 134 | 80.13% | 72.67% | 81.68% | 68.29% |
+| `Channel_H_Standalone` | 8.48% | 0.1694 | 8.84% | 80.73% | 128,613 | 2.57 | 0 | 15 | 15 | 36 | 8.57% | 8.40% | 6.31% | 11.69% |
+| `Channel_I_Standalone` | 10.21% | 0.2267 | 7.05% | 71.26% | 641,074 | 12.82 | 15 | 30 | 44 | 61 | 17.05% | 3.82% | 6.28% | 16.01% |
+| `A-G+H` | 77.83% | 0.8959 | 55.13% | 4.86% | 3,082,376 | 61.65 | 60 | 96 | 108 | 135 | 81.59% | 74.32% | 82.43% | 71.02% |
+| `A-G+H+I` | 78.72% | 0.9017 | 56.25% | 4.49% | 3,634,575 | 72.69 | 72 | 115 | 130 | 162 | 82.98% | 74.76% | 82.88% | 72.58% |
+| `Channel_J_Standalone` | 53.30% | 0.7153 | 27.53% | 18.88% | 1,028,466 | 20.57 | 19 | 40 | 43 | 45 | 59.21% | 47.79% | 56.38% | 48.75% |
+| `A-G+H+I+J` | **80.84%** | **0.9128** | **59.90%** | **3.89%** | 3,836,724 | **76.73** | 75 | 122 | 138 | 178 | **84.86%** | **77.09%** | **84.73%** | **75.09%** |
+
+- **Key Findings:**
+  - **Channel J (Deterministic Transliteration)** is exceptionally strong: 53.30% standalone recall with only 20.57 cands/S1! When unioned, it pushed full candidate link recall past 80% (80.84%) and Oracle Macro $F_{0.5}$ to 0.9128, while India recall surged from 68.29% to 75.09% (+6.80%).
+  - **Channel H (Numeric Address Keys)** added +1.55% link recall for only +2.27 cands/S1.
+  - Zero-coverage entities dropped from 5.56% to 3.89%.
+
+---
+
+## EXP-008: Indic Numeral Normalization, Channel K (Typo/SymSpell), and Channel L (Acronyms & Short Initialisms)
+- **Commit:** `086fe10`
+- **Scope:**
+  1. **Indic Numeral Canonicalization**: Added direct translation table in `normalize_clean` mapping all numerals across 9 scripts (Devanagari, Bengali, Gurmukhi, Gujarati, Oriya, Tamil, Telugu, Kannada, Malayalam) to ASCII 0-9.
+  2. **Channel K (`extract_typo_tolerant_keys`)**: Squeezed consecutive duplicate characters (`williams` -> `wiliams`) and 1-character deletion neighborhood for distinctive tokens.
+  3. **Channel L (`extract_acronym_keys`)**: Generated acronym keys for multi-token business names paired with 3-digit postal code or locality token, plus short acronym fallback.
+  4. Expanded transliteration dictionary to include Gujarati, Kannada, and Malayalam.
+- **Benchmark Results Across Nested Candidate Unions (50,000 S1 sample, 172,731 links):**
+
+| Union | Link Recall (%) | Oracle Macro F0.5 | Full Cov (%) | Zero Cov (%) | Total Cands | Avg/S1 | Med | P95 | P99 | Max | Rec S2 | Rec S3 | Rec US | Rec IN |
+|---|---|---|---|---|---|---|---|---|---|---|---|---|---|---|
+| `A-G+H+I+J` | 80.85% | 0.9128 | 59.90% | 3.88% | 3,837,352 | 76.75 | 76 | 122 | 138 | 177 | 84.87% | 77.10% | 84.73% | 75.10% |
+| `Channel_K_Standalone` | 6.49% | 0.1466 | 7.84% | 83.13% | 657,946 | 13.16 | 15 | 34 | 45 | 105 | 9.12% | 4.02% | 8.02% | 4.21% |
+| `A-G+H+I+J+K` | 80.96% | 0.9133 | 60.13% | 3.86% | 4,345,410 | 86.91 | 86 | 135 | 154 | 203 | 84.98% | 77.20% | 84.88% | 75.15% |
+| `Channel_L_Standalone` | **15.20%** | **0.3139** | 7.50% | 59.39% | 319,244 | **6.38** | 3 | 15 | 15 | 15 | **26.11%** | 5.01% | **21.62%** | 5.71% |
+| `A-G+H+I+J+K+L` | **81.62%** | **0.9175** | **61.09%** | **3.59%** | 4,631,440 | **92.63** | 91 | 145 | 165 | 203 | **85.91%** | **77.62%** | **85.85%** | **75.37%** |
+
+- **Key Discoveries:**
+  - **Channel L (Acronyms & Short Initialisms)** achieved an extraordinary **15.20% standalone link recall** with an ultra-compact candidate volume of **6.38 candidates per S1**! It recovered 26.11% of S2 links and 21.62% of US links.
+  - The combined candidate blocker $A\dots G + H + I + J + K + L$ reached **81.62% link recall**, an **Oracle Macro $F_{0.5}$ of 0.9175**, **61.09% full entity coverage**, and dropped zero-coverage entities down to **3.59%**, all while keeping candidate volume disciplined at **92.63 cands/S1**.
+
+
 
 
