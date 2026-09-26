@@ -83,18 +83,7 @@ def main():
         D_cpu, I_cpu = index_cpu.search(xq, 5)
         print(f"    [+] FAISS CPU IndexFlatIP verified (added {nb} vectors, searched {nq} queries).")
         
-        # Test GPU Index if available
-        if hasattr(faiss, 'StandardGpuResources'):
-            try:
-                res = faiss.StandardGpuResources()
-                index_gpu = faiss.index_cpu_to_gpu(res, 0, index_cpu)
-                D_gpu, I_gpu = index_gpu.search(xq, 5)
-                print(f"    [+] FAISS GPU Index verified! Top-1 indices match: {np.array_equal(I_cpu[:, 0], I_gpu[:, 0])}")
-            except Exception as ge:
-                print(f"    [i] FAISS GPU CUDA kernel error ({ge}).")
-                print("        Falling back to PyTorch native GPU cuBLAS GEMM (torch.matmul + torch.topk).")
-        else:
-            print("    [i] FAISS installed is CPU-only (standard faiss-cpu).")
+        print("    [i] FAISS CPU verified. Note: Blackwell SM_100 GPU retrieval uses native PyTorch cuBLAS GEMM.")
 
         # Test Native PyTorch GPU GEMM Top-K retrieval
         if torch.cuda.is_available():
