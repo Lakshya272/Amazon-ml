@@ -55,6 +55,7 @@ from normalize import (
     normalize_legal_name,
 )
 from metrics import compute_entity_metrics
+from transliterate import transliterate_indic_to_latin
 
 # Ensure UTF-8 output
 if sys.stdout.encoding and sys.stdout.encoding.lower() != 'utf-8':
@@ -185,6 +186,32 @@ def extract_landmark_address_keys(country: str, addr: str) -> List[Tuple[str, st
     return keys
 
 
+def extract_transliterated_keys(country: str, name: str) -> List[Tuple[str, str]]:
+    """Channel J: Deterministic transliteration & phonetic romanization keys."""
+    keys = []
+    if not name:
+        return keys
+    
+    # Transliterate Indic / non-Latin characters to Latin phonetics
+    rom = transliterate_indic_to_latin(name)
+    if rom:
+        legal_rom = normalize_legal_name(rom)
+        if legal_rom:
+            # 1. Exact romanized legal name
+            keys.append((f"{country}_rom_exact", legal_rom))
+            # 2. Romanized prefix
+            comp = "".join(legal_rom.split())
+            if len(comp) >= 5:
+                keys.append((f"{country}_rom_snk", comp[:8]))
+            # 3. Romanized significant tokens
+            toks = [t for t in legal_rom.split() if len(t) >= 4 and t not in _STOP_WORDS]
+            if len(toks) >= 2:
+                keys.append((f"{country}_rom_pair", f"{toks[0]}_{toks[1]}"))
+            elif len(toks) == 1:
+                keys.append((f"{country}_rom_word", toks[0]))
+    return keys
+
+
 
 def run_benchmark(
     data_dir: str,
@@ -274,6 +301,7 @@ def run_benchmark(
     idx_g = defaultdict(list)  # Channel G: (country_snk, prefix8)
     idx_h = defaultdict(list)  # Channel H: (country_num_key, val)
     idx_i = defaultdict(list)  # Channel I: (country_lm_key, val)
+    idx_j = defaultdict(list)  # Channel J: (country_rom_key, val)
 
     total_indexed = 0
     candidate_source_map = {}  # EID -> 'S2' or 'S3'
@@ -337,6 +365,11 @@ def run_benchmark(
                 for k_type, k_val in i_keys:
                     idx_i[(k_type, k_val)].append(eid)
 
+                # Channel J: Deterministic transliteration & phonetic romanization keys
+                j_keys = extract_transliterated_keys(country, b_name)
+                for k_type, k_val in j_keys:
+                    idx_j[(k_type, k_val)].append(eid)
+
                 if max_candidates and total_indexed >= max_candidates:
                     break
         print(f"  Indexed {s_tag} (total candidate records: {total_indexed:,})...")
@@ -362,6 +395,8 @@ def run_benchmark(
         "Channel_I_Standalone",
         "A-G+H",
         "A-G+H+I",
+        "Channel_J_Standalone",
+        "A-G+H+I+J",
     ]
 
     # Metrics container per union
@@ -501,6 +536,13 @@ def run_benchmark(
                 m_i = idx_i.get((k_type, k_val))
                 if m_i: cand_i.update(m_i[:cap_per_channel // 2])
 
+            # 10. Channel J (Deterministic transliteration & phonetic romanization keys)
+            cand_j = set()
+            j_keys = extract_transliterated_keys(country, row[1].strip())
+            for k_type, k_val in j_keys:
+                m_j = idx_j.get((k_type, k_val))
+                if m_j: cand_j.update(m_j[:cap_per_channel // 2])
+
             # Form Nested Unions
             u_a = cand_a
             u_ab = u_a | cand_b
@@ -511,6 +553,7 @@ def run_benchmark(
             u_abcdefg = u_abcdef | cand_g
             u_ag_h = u_abcdefg | cand_h
             u_ag_h_i = u_ag_h | cand_i
+            u_ag_h_i_j = u_ag_h_i | cand_j
 
             unions_dict = {
                 "A": u_a,
@@ -524,6 +567,8 @@ def run_benchmark(
                 "Channel_I_Standalone": cand_i,
                 "A-G+H": u_ag_h,
                 "A-G+H+I": u_ag_h_i,
+                "Channel_J_Standalone": cand_j,
+                "A-G+H+I+J": u_ag_h_i_j,
             }
 
             # Evaluate each nested union
