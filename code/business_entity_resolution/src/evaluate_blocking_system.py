@@ -212,6 +212,87 @@ def extract_transliterated_keys(country: str, name: str) -> List[Tuple[str, str]
     return keys
 
 
+def extract_typo_tolerant_keys(country: str, name: str, addr: str) -> List[Tuple[str, str]]:
+    """Channel K: Typo / Character Deletion & Squeeze neighborhood matching."""
+    keys = []
+    if not name:
+        return keys
+    
+    clean_n = normalize_clean(name)
+    words = [w for w in clean_n.split() if w not in _STOP_WORDS and len(w) >= 5]
+    if not words:
+        return keys
+    
+    # 1. Squeezed word keys (collapse consecutive duplicate letters: 'williams' -> 'wiliams')
+    for w in words[:2]:
+        sqz = re.sub(r'(.)\1+', r'\1', w)
+        if sqz != w and len(sqz) >= 4:
+            keys.append((f"{country}_sqz", sqz))
+            
+    # 2. SymSpell 1-character deletion neighborhood for distinctive words (len 6 to 12)
+    postals = _POSTAL_RE.findall(addr) if addr else []
+    p2 = postals[0][:2] if postals and len(postals[0]) >= 2 else ""
+    
+    for w in words[:2]:
+        if 6 <= len(w) <= 12:
+            # Pair raw word with postal prefix
+            if p2:
+                keys.append((f"{country}_del_{p2}", w))
+            elif len(w) >= 8:
+                keys.append((f"{country}_del_rare", w))
+            # Pair 1-deletions
+            for i in range(len(w)):
+                del_w = w[:i] + w[i+1:]
+                if p2:
+                    keys.append((f"{country}_del_{p2}", del_w))
+                elif len(w) >= 8:
+                    keys.append((f"{country}_del_rare", del_w))
+    return keys
+
+
+def extract_acronym_keys(country: str, name: str, addr: str) -> List[Tuple[str, str]]:
+    """
+    Channel L: Acronym / Initialism matching.
+    Pairs first-letters of multi-word business names with address locality or postal code.
+    Also handles short acronym names (e.g. 'TCS', 'IBM', 'SBI', 'BPCL').
+    """
+    keys = []
+    if not name:
+        return keys
+    clean_n = normalize_clean(name)
+    words = [w for w in clean_n.split() if w not in _STOP_WORDS]
+    if not words:
+        return keys
+    
+    postals = _POSTAL_RE.findall(addr) if addr else []
+    p3 = postals[0][:3] if postals and len(postals[0]) >= 3 else ""
+    
+    # Case 1: Multi-word business name -> generate acronym
+    if len(words) >= 2:
+        acr = "".join(w[0] for w in words if w[0].isalnum())
+        if 2 <= len(acr) <= 6:
+            if p3:
+                keys.append((f"{country}_acr_p3", f"{acr}_{p3}"))
+            else:
+                clean_a = normalize_clean(addr) if addr else ""
+                a_words = [aw for aw in clean_a.split() if aw not in _STOP_WORDS and len(aw) >= 4]
+                if a_words:
+                    keys.append((f"{country}_acr_city", f"{acr}_{a_words[-1]}"))
+                    
+    # Case 2: Business name itself is already an acronym / short token (e.g. 'tcs', 'sbi')
+    elif len(words) == 1 and 2 <= len(words[0]) <= 5 and words[0].isalpha():
+        acr = words[0]
+        if p3:
+            keys.append((f"{country}_acr_p3", f"{acr}_{p3}"))
+        else:
+            clean_a = normalize_clean(addr) if addr else ""
+            a_words = [aw for aw in clean_a.split() if aw not in _STOP_WORDS and len(aw) >= 4]
+            if a_words:
+                keys.append((f"{country}_acr_city", f"{acr}_{a_words[-1]}"))
+                
+    return keys
+
+
 
 def run_benchmark(
     data_dir: str,
@@ -302,6 +383,8 @@ def run_benchmark(
     idx_h = defaultdict(list)  # Channel H: (country_num_key, val)
     idx_i = defaultdict(list)  # Channel I: (country_lm_key, val)
     idx_j = defaultdict(list)  # Channel J: (country_rom_key, val)
+    idx_k = defaultdict(list)  # Channel K: (country_typo_key, val)
+    idx_l = defaultdict(list)  # Channel L: (country_acr_key, val)
 
     total_indexed = 0
     candidate_source_map = {}  # EID -> 'S2' or 'S3'
@@ -370,6 +453,16 @@ def run_benchmark(
                 for k_type, k_val in j_keys:
                     idx_j[(k_type, k_val)].append(eid)
 
+                # Channel K: Typo / Character Deletion & Squeeze keys
+                k_keys = extract_typo_tolerant_keys(country, b_name, b_addr)
+                for k_type, k_val in k_keys:
+                    idx_k[(k_type, k_val)].append(eid)
+
+                # Channel L: Acronym / Initialism keys
+                l_keys = extract_acronym_keys(country, b_name, b_addr)
+                for k_type, k_val in l_keys:
+                    idx_l[(k_type, k_val)].append(eid)
+
                 if max_candidates and total_indexed >= max_candidates:
                     break
         print(f"  Indexed {s_tag} (total candidate records: {total_indexed:,})...")
@@ -397,6 +490,10 @@ def run_benchmark(
         "A-G+H+I",
         "Channel_J_Standalone",
         "A-G+H+I+J",
+        "Channel_K_Standalone",
+        "A-G+H+I+J+K",
+        "Channel_L_Standalone",
+        "A-G+H+I+J+K+L",
     ]
 
     # Metrics container per union
@@ -543,6 +640,20 @@ def run_benchmark(
                 m_j = idx_j.get((k_type, k_val))
                 if m_j: cand_j.update(m_j[:cap_per_channel // 2])
 
+            # 11. Channel K (Typo / Character Deletion & Squeeze keys)
+            cand_k = set()
+            k_keys = extract_typo_tolerant_keys(country, row[1].strip(), b_addr)
+            for k_type, k_val in k_keys:
+                m_k = idx_k.get((k_type, k_val))
+                if m_k: cand_k.update(m_k[:cap_per_channel // 2])
+
+            # 12. Channel L (Acronym / Initialism keys)
+            cand_l = set()
+            l_keys = extract_acronym_keys(country, row[1].strip(), b_addr)
+            for k_type, k_val in l_keys:
+                m_l = idx_l.get((k_type, k_val))
+                if m_l: cand_l.update(m_l[:cap_per_channel // 2])
+
             # Form Nested Unions
             u_a = cand_a
             u_ab = u_a | cand_b
@@ -554,6 +665,8 @@ def run_benchmark(
             u_ag_h = u_abcdefg | cand_h
             u_ag_h_i = u_ag_h | cand_i
             u_ag_h_i_j = u_ag_h_i | cand_j
+            u_ag_h_i_j_k = u_ag_h_i_j | cand_k
+            u_ag_h_i_j_k_l = u_ag_h_i_j_k | cand_l
 
             unions_dict = {
                 "A": u_a,
@@ -569,6 +682,10 @@ def run_benchmark(
                 "A-G+H+I": u_ag_h_i,
                 "Channel_J_Standalone": cand_j,
                 "A-G+H+I+J": u_ag_h_i_j,
+                "Channel_K_Standalone": cand_k,
+                "A-G+H+I+J+K": u_ag_h_i_j_k,
+                "Channel_L_Standalone": cand_l,
+                "A-G+H+I+J+K+L": u_ag_h_i_j_k_l,
             }
 
             # Evaluate each nested union

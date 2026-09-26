@@ -27,6 +27,21 @@ if sys.stdout.encoding and sys.stdout.encoding.lower() != 'utf-8':
 _WHITESPACE_RE = re.compile(r'\s+')
 _NON_ALPHANUM_RE = re.compile(r'[^\w\s]', re.UNICODE)
 
+# Indic numerals translation to canonical ASCII 0-9
+_INDIC_DIGITS = (
+    "०१२३४५६७८९"  # Devanagari
+    "০১২৩৪৫৬৭৮৯"  # Bengali
+    "੦੧੨੩੪੫੬੭੮੯"  # Gurmukhi
+    "૦૧૨૩૪૫૬૭૮૯"  # Gujarati
+    "୦୧୨୩૪୫୬୭୮୯"  # Oriya
+    "௦௧௨௩௪௫௬௭௮௯"  # Tamil
+    "౦౧౨౩౪౫౬౭౮౯"  # Telugu
+    "೦೧೨೩೪೫೬೭೮೯"  # Kannada
+    "൦൧൨൩൪൫൬൭൮൯"  # Malayalam
+)
+_ASCII_DIGITS = "0123456789" * 9
+_DIGIT_TRANSLATE_TABLE = str.maketrans(_INDIC_DIGITS, _ASCII_DIGITS)
+
 # Compile regexes with word boundaries for legal suffixes
 _LEGAL_SUFFIX_REPLACEMENTS = [
     # Multi-token phrases first
@@ -84,12 +99,15 @@ def normalize_clean(text: Optional[str]) -> str:
     """
     Level 2: Alphanumeric clean normalization.
     - Applies Level 1 base normalization
+    - Translates Indic numerals to ASCII 0-9
     - Replaces symbols and punctuation with spaces
     - Re-collapses whitespace
     """
     if not text:
         return ""
     text = normalize_base(text)
+    # Translate Indic numerals to ASCII 0-9
+    text = text.translate(_DIGIT_TRANSLATE_TABLE)
     # Replace '&' with 'and' before stripping symbols
     text = text.replace('&', ' and ')
     text = _NON_ALPHANUM_RE.sub(' ', text)
