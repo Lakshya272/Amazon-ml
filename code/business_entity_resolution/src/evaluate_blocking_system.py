@@ -54,6 +54,7 @@ from normalize import (
     normalize_clean,
     normalize_legal_name,
 )
+from metrics import compute_entity_metrics
 
 # Ensure UTF-8 output
 if sys.stdout.encoding and sys.stdout.encoding.lower() != 'utf-8':
@@ -64,6 +65,7 @@ if sys.stdout.encoding and sys.stdout.encoding.lower() != 'utf-8':
 
 _DIGIT_SEQ_RE = re.compile(r'\b\d+\b')
 _POSTAL_RE = re.compile(r'\b\d{5,6}\b')
+_LANDMARK_RE = re.compile(r'\b(?:near|opp|opposite|behind|beside|adj|adjacent|next\s+to|opp\.)\s+([a-zA-Z0-9]+)', re.IGNORECASE)
 _STOP_WORDS = {
     'and', 'the', 'of', 'in', 'at', 'on', 'for', 'with', 'to', 'a', 'an',
     'private', 'limited', 'corporation', 'incorporated', 'company', 'llc', 'sarl', 'sas', 'gmbh',
@@ -136,6 +138,52 @@ def extract_sorted_neighborhood_key(country: str, legal_name: str) -> Optional[T
     if len(comp) >= 5:
         return (f"{country}_snk", comp[:8])
     return None
+
+
+def extract_numeric_address_keys(country: str, addr: str) -> List[Tuple[str, str]]:
+    """Channel H: Numeric address keys (Postal prefix + Building/House number)."""
+    keys = []
+    if not addr:
+        return keys
+    clean_a = normalize_clean(addr)
+    postals = _POSTAL_RE.findall(clean_a)
+    digits = [d for d in _DIGIT_SEQ_RE.findall(clean_a) if len(d) <= 5 and d != '0']
+    
+    if postals and digits:
+        p = postals[0]
+        # Pair house/unit number with 3-digit and 5-digit postal prefix
+        for d in digits[:2]:
+            if d != p:
+                keys.append((f"{country}_num_post5", f"{d}_{p[:5]}"))
+                if len(p) >= 3:
+                    keys.append((f"{country}_num_post3", f"{d}_{p[:3]}"))
+    elif len(digits) >= 2:
+        # Pair first two numbers (e.g. plot/door number + sector/street number)
+        keys.append((f"{country}_num_pair", f"{digits[0]}_{digits[1]}"))
+    return keys
+
+
+def extract_landmark_address_keys(country: str, addr: str) -> List[Tuple[str, str]]:
+    """Channel I: Landmark / Relaxed address locality keys."""
+    keys = []
+    if not addr:
+        return keys
+    # 1. Regex landmark extraction
+    matches = _LANDMARK_RE.findall(addr)
+    for lm in matches:
+        lm_clean = lm.lower().strip()
+        if len(lm_clean) >= 4 and lm_clean not in _STOP_WORDS:
+            keys.append((f"{country}_landmark", lm_clean))
+            
+    # 2. Relaxed address words (first and last significant words)
+    clean_a = normalize_clean(addr)
+    words = [w for w in clean_a.split() if w not in _STOP_WORDS and not w.isdigit() and len(w) >= 4]
+    if len(words) >= 4:
+        # First word + last word (e.g., Street name + City/Locality)
+        keys.append((f"{country}_addr_edge", f"{words[0]}_{words[-1]}"))
+        keys.append((f"{country}_addr_edge2", f"{words[1]}_{words[-1]}"))
+    return keys
+
 
 
 def run_benchmark(
@@ -224,6 +272,8 @@ def run_benchmark(
     idx_e = defaultdict(list)  # Channel E: (country_drop_key, tokens)
     idx_f = defaultdict(list)  # Channel F: (country_addr_drop_key, word)
     idx_g = defaultdict(list)  # Channel G: (country_snk, prefix8)
+    idx_h = defaultdict(list)  # Channel H: (country_num_key, val)
+    idx_i = defaultdict(list)  # Channel I: (country_lm_key, val)
 
     total_indexed = 0
     candidate_source_map = {}  # EID -> 'S2' or 'S3'
@@ -277,6 +327,16 @@ def run_benchmark(
                 if snk:
                     idx_g[snk].append(eid)
 
+                # Channel H: Numeric address keys
+                h_keys = extract_numeric_address_keys(country, b_addr)
+                for k_type, k_val in h_keys:
+                    idx_h[(k_type, k_val)].append(eid)
+
+                # Channel I: Landmark / Relaxed address locality keys
+                i_keys = extract_landmark_address_keys(country, b_addr)
+                for k_type, k_val in i_keys:
+                    idx_i[(k_type, k_val)].append(eid)
+
                 if max_candidates and total_indexed >= max_candidates:
                     break
         print(f"  Indexed {s_tag} (total candidate records: {total_indexed:,})...")
@@ -298,6 +358,10 @@ def run_benchmark(
         "A+B+C+D+E",
         "A+B+C+D+E+F",
         "A+B+C+D+E+F+G",
+        "Channel_H_Standalone",
+        "Channel_I_Standalone",
+        "A-G+H",
+        "A-G+H+I",
     ]
 
     # Metrics container per union
@@ -313,6 +377,8 @@ def run_benchmark(
             "cov_100": 0,
             "full_coverage_entities": 0,
             "zero_coverage_entities": 0,
+            # Oracle Matcher Macro F0.5 tracking
+            "sum_oracle_f05": 0.0,
             # Breakdown by Source
             "rec_s2": 0,
             "rec_s3": 0,
@@ -421,6 +487,20 @@ def run_benchmark(
                 m_g = idx_g.get(snk)
                 if m_g: cand_g.update(m_g[:cap_per_channel // 2])
 
+            # 8. Channel H (Numeric address keys)
+            cand_h = set()
+            h_keys = extract_numeric_address_keys(country, b_addr)
+            for k_type, k_val in h_keys:
+                m_h = idx_h.get((k_type, k_val))
+                if m_h: cand_h.update(m_h[:cap_per_channel // 2])
+
+            # 9. Channel I (Landmark / Relaxed address locality keys)
+            cand_i = set()
+            i_keys = extract_landmark_address_keys(country, b_addr)
+            for k_type, k_val in i_keys:
+                m_i = idx_i.get((k_type, k_val))
+                if m_i: cand_i.update(m_i[:cap_per_channel // 2])
+
             # Form Nested Unions
             u_a = cand_a
             u_ab = u_a | cand_b
@@ -429,6 +509,8 @@ def run_benchmark(
             u_abcde = u_abcd | cand_e
             u_abcdef = u_abcde | cand_f
             u_abcdefg = u_abcdef | cand_g
+            u_ag_h = u_abcdefg | cand_h
+            u_ag_h_i = u_ag_h | cand_i
 
             unions_dict = {
                 "A": u_a,
@@ -438,6 +520,10 @@ def run_benchmark(
                 "A+B+C+D+E": u_abcde,
                 "A+B+C+D+E+F": u_abcdef,
                 "A+B+C+D+E+F+G": u_abcdefg,
+                "Channel_H_Standalone": cand_h,
+                "Channel_I_Standalone": cand_i,
+                "A-G+H": u_ag_h,
+                "A-G+H+I": u_ag_h_i,
             }
 
             # Evaluate each nested union
@@ -452,6 +538,12 @@ def run_benchmark(
                 rec = cand_set & true_set
                 n_rec = len(rec)
                 m_dict["recovered_links"] += n_rec
+
+                # Oracle Matcher: outputs (cand_set & true_set)
+                # For singletons (n_true == 0): oracle outputs empty set -> f05 = 1.0
+                # For non-singletons: oracle outputs rec. Since rec <= true_set, precision = 1.0, recall = n_rec / n_true
+                oracle_f05, _, _, _, _, _ = compute_entity_metrics(true_set, rec)
+                m_dict["sum_oracle_f05"] += oracle_f05
 
                 # Coverage distribution
                 if n_true == 0:
@@ -528,9 +620,12 @@ def run_benchmark(
         p99_cands = int(np.percentile(cands_arr, 99))
         max_cands = int(np.max(cands_arr))
 
+        oracle_macro_f05 = round(m["sum_oracle_f05"] / s1_count, 4) if s1_count > 0 else 0.0
+
         row = {
             "union": u_name,
             "link_recall": round(link_recall, 2),
+            "oracle_macro_f05": oracle_macro_f05,
             "full_coverage_rate": round(full_cov_rate, 2),
             "zero_coverage_rate": round(zero_cov_rate, 2),
             "cov_0_pct": round(cov_0_pct, 2),
@@ -555,7 +650,8 @@ def run_benchmark(
         benchmark_table.append(row)
 
         print(f"\nUnion: {u_name}")
-        print(f"  Link Recall:        {row['link_recall']:.2f}%  |  Full Coverage: {row['full_coverage_rate']:.2f}%  |  Zero Coverage: {row['zero_coverage_rate']:.2f}%")
+        print(f"  Link Recall:        {row['link_recall']:.2f}%  |  Oracle Macro F0.5: {row['oracle_macro_f05']:.4f}")
+        print(f"  Entity Coverage:    Full Coverage: {row['full_coverage_rate']:.2f}%  |  Zero Coverage: {row['zero_coverage_rate']:.2f}%")
         print(f"  Coverage Bins:      0%: {row['cov_0_pct']}%  |  1-49%: {row['cov_1_49_pct']}%  |  50-99%: {row['cov_50_99_pct']}%  |  100%: {row['cov_100_pct']}%")
         print(f"  Candidate Volume:   Total: {row['total_candidates']:,}  |  Avg/S1: {row['avg_cands_s1']}  |  Med: {row['median_cands']}  |  P95: {row['p95_cands']}  |  P99: {row['p99_cands']}  |  Max: {row['max_cands']}")
         print(f"  Sources & Country:  S2 Rec: {row['rec_s2']}%  |  S3 Rec: {row['rec_s3']}%  |  US Rec: {row['rec_us']}%  |  IN Rec: {row['rec_in']}%")
@@ -571,12 +667,12 @@ def run_benchmark(
         f"\n**Evaluated on Full Ground Truth:** {s1_count:,} Source 1 Entities, {total_true_links:,} True Links",
         f"**Execution Runtime:** {round(time.time() - overall_start, 2)}s (~{round((time.time() - overall_start)/60, 1)} min)\n",
         "## 1. Candidate Union Frontier Table\n",
-        "| Union | Link Recall (%) | Full Cov (%) | Zero Cov (%) | Cov 0% | 1-49% | 50-99% | 100% | Total Cands | Avg/S1 | Med | P95 | P99 | Max | Rec S2 | Rec S3 | Rec US | Rec IN |",
-        "|---|---|---|---|---|---|---|---|---|---|---|---|---|---|---|---|---|---|",
+        "| Union | Link Recall (%) | Oracle Macro F0.5 | Full Cov (%) | Zero Cov (%) | Cov 0% | 1-49% | 50-99% | 100% | Total Cands | Avg/S1 | Med | P95 | P99 | Max | Rec S2 | Rec S3 | Rec US | Rec IN |",
+        "|---|---|---|---|---|---|---|---|---|---|---|---|---|---|---|---|---|---|---|",
     ]
     for r in benchmark_table:
         md_lines.append(
-            f"| `{r['union']}` | **{r['link_recall']}%** | {r['full_coverage_rate']}% | {r['zero_coverage_rate']}% | "
+            f"| `{r['union']}` | **{r['link_recall']}%** | **{r['oracle_macro_f05']:.4f}** | {r['full_coverage_rate']}% | {r['zero_coverage_rate']}% | "
             f"{r['cov_0_pct']}% | {r['cov_1_49_pct']}% | {r['cov_50_99_pct']}% | {r['cov_100_pct']}% | "
             f"{r['total_candidates']:,} | {r['avg_cands_s1']} | {r['median_cands']} | {r['p95_cands']} | {r['p99_cands']} | {r['max_cands']} | "
             f"{r['rec_s2']}% | {r['rec_s3']}% | {r['rec_us']}% | {r['rec_in']}% |"
