@@ -97,4 +97,38 @@
   - **Channel E (Drop-One Token):** Raised link recall by **+10.65%** (from 60.63% to **71.28%**) while only increasing average candidates from 14.3 to 24.9 per S1! Full coverage rate jumped from 33.6% to 45.7%, and zero-coverage entities dropped to 7.4%.
   - **Channels F & G:** Pushed link recall further to **76.34%** (and **80.36% on S2**, **81.64% on US**), cutting zero-coverage entities down to just 5.54%.
 
+---
+
+## EXP-006: First Supervised LightGBM Matcher, Validation Macro F0.5 vs Volume, and RunPod GPU Setup
+- **Commit:** `2c70d0e`
+- **Scope:** 
+  1. Trained supervised LightGBM pairwise binary classification matcher using hard negatives extracted from candidates.
+  2. Evaluated on strictly held-out validation split (zero S1 leakage, 20,000 entities, 69,303 true links).
+  3. Formed Missed-Link Failure Taxonomy on candidates from the frozen $A+B+C+D+E+F+G$ baseline.
+  4. Benchmark of GPU embedding models on RunPod RTX PRO 4500 Blackwell GPU.
+- **Matcher Validation Results across Candidate Unions:**
+
+| Union | Validation Macro F0.5 | Precision | Recall | Cand Link Recall (%) | Avg Cands/S1 | Median | P95 | Singleton Acc | FN Damaged Entities | Singleton False Merges |
+|---|---|---|---|---|---|---|---|---|---|---|
+| `A` | **0.4180** | 0.8055 | 0.2273 | 22.88% | 6.03 | 1 | 30 | 0.8342 | 4 | 182 |
+| `A+B` | **0.4648** | 0.8010 | 0.2872 | 29.06% | 8.34 | 3 | 30 | 0.7887 | 80 | 232 |
+| `A+B+C` | **0.7094** | 0.8540 | 0.5934 | 60.72% | 14.31 | 14 | 36 | 0.7332 | 371 | 293 |
+| `A+B+C+D+E` | **0.7409** | 0.8102 | 0.6918 | 71.24% | 24.87 | 22 | 53 | 0.5719 | 641 | 470 |
+| `A+B+C+D+E+F+G` | **0.7528** | 0.7979 | 0.7379 | 76.29% | 59.42 | 58 | 92 | 0.5191 | 875 | 528 |
+
+- **Missed-Link Failure Taxonomy (True Links Missed by A+B+C+D+E+F+G Candidates):**
+  - **Address Variation / Alternate Locality (54.6%):** Different street components, locality names, or unaligned landmarks despite matching entity.
+  - **Multilingual / Transliteration (27.8%):** Devanagari/Kannada vs Latin script representations of the same entity name/address.
+  - **Heavy Spelling / OCR Typos (13.4%):** Severe character substitutions exceeding 3-gram thresholds.
+  - **Missing Address Components (3.6%):** Empty address or generic city only.
+  - **Extreme Name Acronyms (0.6%):** Multi-word organization vs standalone acronym.
+
+- **RunPod GPU Embedding Models Benchmark (RTX PRO 4500 Blackwell 32.6GB VRAM):**
+  - `BAAI/bge-m3`: 1024-d, 2.2 GB VRAM, 485.8 texts/sec. (Strongest candidate for multilingual Devanagari/Kannada/Latin ER).
+  - `ibm-granite/granite-embedding-278m-multilingual`: 768-d, 0.5 GB VRAM, 3,529.2 texts/sec. (Ultra-fast candidate generation).
+  - `intfloat/multilingual-e5-large`: 1024-d, 2.1 GB VRAM, 1,736.7 texts/sec.
+  - `Qwen/Qwen3-Embedding-0.6B`: 1024-d, 3.4 GB VRAM, 492.4 texts/sec.
+  - Native PyTorch CUDA Top-K vector retrieval: **2,040 qps** over 10,000 vectors.
+
+
 
