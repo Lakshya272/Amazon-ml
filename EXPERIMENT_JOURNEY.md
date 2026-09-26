@@ -72,3 +72,29 @@
   - Character TF-IDF successfully captures spelling variations, typos, and transliterations.
   - Adding Char TF-IDF (Top-50) and relaxed character n-grams raises the overall candidate ceiling to **63.83%** with only **20.57 candidates/S1** (median 16, P95 54), keeping candidate explosion completely suppressed.
 
+---
+
+## EXP-005: Comprehensive Nested Candidate Union Benchmark (A through G) with Entity-Level Coverage
+- **Commit:** `e33686a`
+- **Scope:** Full training ground-truth evaluation across 7 nested unions on all 2,206,821 Source 1 entities (7,638,365 ground-truth links).
+- **Execution Time:** 986s (~16.4 min), Peak RAM ~10.8 GiB.
+- **Nested Union Frontier Table:**
+
+| Union | Link Recall (%) | Full Cov (%) | Zero Cov (%) | Cov 0% | 1-49% | 50-99% | 100% | Total Cands | Avg/S1 | Med | P95 | P99 | Max | Rec S2 | Rec S3 | Rec US | Rec IN |
+|---|---|---|---|---|---|---|---|---|---|---|---|---|---|---|---|---|---|
+| `A` | **23.01%** | 8.37% | 40.65% | 40.65% | 34.11% | 16.88% | 8.37% | 13,264,157 | 6.01 | 1 | 30 | 30 | 30 | 23.51% | 22.54% | 24.25% | 21.15% |
+| `A+B` | **28.99%** | 12.26% | 36.00% | 36.00% | 31.13% | 20.61% | 12.26% | 18,378,813 | 8.33 | 3 | 30 | 30 | 42 | 32.03% | 26.15% | 29.71% | 27.93% |
+| `A+B+C` | **60.61%** | 33.61% | 12.24% | 12.24% | 16.27% | 37.89% | 33.61% | 31,456,529 | 14.25 | 14 | 36 | 45 | 65 | 64.01% | 57.42% | 67.56% | 50.20% |
+| `A+B+C+D` | **60.63%** | 33.67% | 12.23% | 12.23% | 16.26% | 37.84% | 33.67% | 31,550,537 | 14.30 | 14 | 36 | 45 | 65 | 64.04% | 57.44% | 67.57% | 50.25% |
+| `A+B+C+D+E` | **71.28%** | 45.72% | 7.42% | 7.42% | 10.50% | 36.35% | 45.72% | 54,856,119 | 24.86 | 22 | 53 | 67 | 96 | 74.83% | 67.95% | 78.53% | 60.43% |
+| `A+B+C+D+E+F` | **73.00%** | 47.46% | 6.45% | 6.45% | 9.66% | 36.43% | 47.46% | 114,837,298 | 52.04 | 49 | 81 | 95 | 126 | 76.90% | 69.34% | 78.82% | 64.29% |
+| `A+B+C+D+E+F+G` | **76.34%** | 52.86% | 5.54% | 5.54% | 8.12% | 33.49% | 52.86% | 131,123,278 | 59.42 | 58 | 92 | 104 | 133 | 80.36% | 72.57% | 81.64% | 68.41% |
+
+- **Cardinality Breakdown (Link Recall by Ground Truth Link Count):**
+  - `A+B+C+D+E`: 70.86% on 1-match, 71.22% on 2-matches, 71.32% on 3-4 matches, 71.26% on 5+ matches.
+  - `A+B+C+D+E+F+G`: 76.05% on 1-match, 76.34% on 2-matches, 76.40% on 3-4 matches, 76.29% on 5+ matches.
+- **Key Breakthroughs & Diagnostics:**
+  - **Channel E (Drop-One Token):** Raised link recall by **+10.65%** (from 60.63% to **71.28%**) while only increasing average candidates from 14.3 to 24.9 per S1! Full coverage rate jumped from 33.6% to 45.7%, and zero-coverage entities dropped to 7.4%.
+  - **Channels F & G:** Pushed link recall further to **76.34%** (and **80.36% on S2**, **81.64% on US**), cutting zero-coverage entities down to just 5.54%.
+
+
