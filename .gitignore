@@ -16,7 +16,12 @@ data/
 dataset.zip
 
 # ML outputs / generated artifacts
-outputs/*
+# Allow metrics, reports, and benchmark json outputs for auditing
+!outputs/**
+outputs/**/*.log
+outputs/**/train_s1_ids.json
+outputs/**/val_s1_ids.json
+outputs/cache/
 models/
 checkpoints/
 embeddings/

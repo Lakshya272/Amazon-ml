@@ -1,0 +1,10 @@
+{
+  "val_ratio": 0.2,
+  "seed": 42,
+  "total_s1": 2206821,
+  "train_s1_count": 1765461,
+  "val_s1_count": 441360,
+  "val_percentage": 20.0,
+  "val_singletons": 24649,
+  "val_total_links": 1527212
+}

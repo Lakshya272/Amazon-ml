@@ -1,0 +1,14 @@
+numpy==2.0.2
+scipy==1.13.1
+scikit-learn==1.6.1
+lightgbm==4.6.0
+xgboost==2.1.4
+polars==1.44.2
+pyarrow==25.0.1
+rapidfuzz==3.14.6
+torch==2.8.0
+transformers==5.17.0
+sentence-transformers==6.1.0
+accelerate==1.15.0
+safetensors==0.8.0
+faiss-gpu-cu12==1.14.1.post1

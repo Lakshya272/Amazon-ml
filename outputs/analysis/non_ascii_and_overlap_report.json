@@ -1,0 +1,254 @@
+{
+  "file_stats": {
+    "train_s1": {
+      "file": "train_source1.tsv",
+      "total": 2206821,
+      "non_ascii_name_count": 0,
+      "non_ascii_name_pct": 0.0,
+      "non_ascii_addr_count": 554,
+      "non_ascii_addr_pct": 0.025,
+      "either_pct": 0.025,
+      "scripts": {
+        "latin_accented": 721,
+        "other_unicode": 1315
+      },
+      "sample_names": [],
+      "sample_addrs": [
+        [
+          "A-212, Malhotra Complex, Gali No. \u00c2\u0080\u0093 01, Vikas Marg, Shakarpur, Laxmi Nagar, East Delhi, Delhi",
+          "India"
+        ],
+        [
+          "C 12/27 \u00c2\u0080\u0093A & C 12/28, Lahangpura Aurangabad, Varanasi, Uttar Pradesh",
+          "India"
+        ],
+        [
+          "Hyderabad, Vsp\u00e2\u0080\u0099S Bhavana Surovar, Madhavapuri, Hill Flat No.101, First Floor, Pjr Enclave, Ch, Andanagar, Hyderabad, Plot No.277, Telangana",
+          "India"
+        ]
+      ]
+    },
+    "train_s2": {
+      "file": "train_source2.tsv",
+      "total": 5034616,
+      "non_ascii_name_count": 764608,
+      "non_ascii_name_pct": 15.187,
+      "non_ascii_addr_count": 478453,
+      "non_ascii_addr_pct": 9.503,
+      "either_pct": 21.982,
+      "scripts": {
+        "devanagari": 9351059,
+        "other_unicode": 7534713,
+        "latin_accented": 299425
+      },
+      "sample_names": [
+        [
+          "\u0930\u093e\u092e \u092e\u093e\u0930\u094d\u0915\u0947\u091f\u093f\u0902\u0917 \u092a\u094d\u0930\u093e\u0907\u0935\u0947\u091f \u0932\u093f\u092e\u093f\u091f\u0947\u0921",
+          "India"
+        ],
+        [
+          "\u0906\u0926\u093f\u0924\u094d\u092f \u092a\u094d\u0930\u0949\u092a\u0930\u094d\u091f\u0940\u091c \u090f\u0932\u090f\u0932\u092a\u0940",
+          "India"
+        ],
+        [
+          "\u0938\u0928 \u0915\u0902\u0938\u094d\u091f\u094d\u0930\u0915\u094d\u0936\u0902\u0938 \u092a\u094d\u0930\u093e\u0907\u0935\u0947\u091f \u0932\u093f\u092e\u093f\u091f\u0947\u0921",
+          "India"
+        ]
+      ],
+      "sample_addrs": [
+        [
+          "PLOT NO B-78/1, ADDITIONAL MIDC ANAND NAGAR, AMBERNATH EAST, THANE, \u092e\u0939\u093e\u0930\u093e\u0937\u094d\u091f\u094d\u0930",
+          "India"
+        ],
+        [
+          "H.NO 13 C/O:MADAN MOHAN JHA, S/O:SH AKHILESH JHA 166-A, KALYAN NAGAR, HAJYAWALA SANGANEER, JAIPUR, \u0930\u093e\u091c\u0938\u094d\u0925\u093e\u0928",
+          "India"
+        ],
+        [
+          "PLOT NO. ##74, SECOND FLOOR ZONE-2, M.P. NAGAR, BHOPAL, \u092e\u0927\u094d\u092f \u092a\u094d\u0930\u0926\u0947\u0936",
+          "India"
+        ]
+      ]
+    },
+    "train_s3": {
+      "file": "train_source3.tsv",
+      "total": 5285603,
+      "non_ascii_name_count": 606737,
+      "non_ascii_name_pct": 11.479,
+      "non_ascii_addr_count": 476588,
+      "non_ascii_addr_pct": 9.017,
+      "either_pct": 18.724,
+      "scripts": {
+        "latin_accented": 337983,
+        "other_unicode": 4902578,
+        "devanagari": 6271439
+      },
+      "sample_names": [
+        [
+          "LLC Moncada L\u00e9arning Center",
+          "US"
+        ],
+        [
+          "B\u00e9que",
+          "US"
+        ],
+        [
+          "\u0b85\u0bb0\u0bbf\u0bb9\u0ba8\u0bcd\u0ba4\u0bcd Foundation Private Limited",
+          "India"
+        ]
+      ],
+      "sample_addrs": [
+        [
+          "Door No 183, 41St Cross, 22Nd Main 9Th Block Jayanagar, Bengaluru Urban, Bangalore, \u0c95\u0cb0\u0ccd\u0ca8\u0cbe\u0c9f\u0c95",
+          "India"
+        ],
+        [
+          "Plot No.: 3829/3250, Near Metro Pillar No: 234, Kanhaiya Nagar, Tri Nagar, Delhi, New Delhi, \u0926\u093f\u0932\u094d\u0932\u0940",
+          "India"
+        ],
+        [
+          "Door No 0521 Trinity No 1/1 4Nd Main Road K H M Block Ganganagar R T, Nagar, Bangalore, \u0c95\u0cb0\u0ccd\u0ca8\u0cbe\u0c9f\u0c95",
+          "India"
+        ]
+      ]
+    },
+    "test_s1": {
+      "file": "test_source1.tsv",
+      "total": 1732544,
+      "non_ascii_name_count": 40789,
+      "non_ascii_name_pct": 2.354,
+      "non_ascii_addr_count": 73800,
+      "non_ascii_addr_pct": 4.26,
+      "either_pct": 5.856,
+      "scripts": {
+        "latin_accented": 132493,
+        "other_unicode": 3200
+      },
+      "sample_names": [
+        [
+          "Maison de Sant\u00e9 Generation",
+          "France"
+        ],
+        [
+          "\u00c9cole primaire Sainte Pierre",
+          "France"
+        ],
+        [
+          "\u00c9tablissements Demployeurs SARL",
+          "France"
+        ]
+      ],
+      "sample_addrs": [
+        [
+          "175 Boulevard du Pr\u00e9sident Franklin Roosevelt, Bordeaux, Nouvelle-Aquitaine",
+          "France"
+        ],
+        [
+          "30 Rue Louis Th\u00e9nard, Saint-Nazaire, Pays de la Loire",
+          "France"
+        ],
+        [
+          "5 Impasse Jean Baptiste Cl\u00e9ment, Saint-Herblain, Pays de la Loire",
+          "France"
+        ]
+      ]
+    },
+    "test_s2": {
+      "file": "test_source2.tsv",
+      "total": 4887273,
+      "non_ascii_name_count": 928158,
+      "non_ascii_name_pct": 18.991,
+      "non_ascii_addr_count": 720665,
+      "non_ascii_addr_pct": 14.746,
+      "either_pct": 29.682,
+      "scripts": {
+        "latin_accented": 613796,
+        "other_unicode": 8905365,
+        "devanagari": 10924637
+      },
+      "sample_names": [
+        [
+          "SCI Ptit \u00c0micale",
+          "France"
+        ],
+        [
+          "\u0c15\u0c43\u0c37\u0c4d\u0c23\u0c3e \u0c07\u0c02\u0c2a\u0c46\u0c15\u0c4d\u0c38\u0c4d \u0c32\u0c3f\u0c2e\u0c3f\u0c1f\u0c46\u0c21\u0c4d",
+          "India"
+        ],
+        [
+          "\u0ad0 Foundation \u0aaa\u0acd\u0ab0\u0abe\u0a87\u0ab5\u0ac7\u0a9f \u0ab2\u0abf\u0aae\u0abf\u0a9f\u0ac7\u0aa1",
+          "India"
+        ]
+      ],
+      "sample_addrs": [
+        [
+          "NO. 5 ALL\u00c9E DES H\u00caTRES, Pornic, Loire-Atlantique",
+          "France"
+        ],
+        [
+          "CRYSTAL PLAZA, TOWER NO.1, 2ND FLOOR, 2-B GOTRI MAIN ROAD, VADODARA, \u0a97\u0ac1\u0a9c\u0ab0\u0abe\u0aa4",
+          "India"
+        ],
+        [
+          "H.NO 4/A ASHTAVINAYAK, NAGAR, NAGPUR (URBAN), NAGPUR, \u092e\u0939\u093e\u0930\u093e\u0937\u094d\u091f\u094d\u0930",
+          "India"
+        ]
+      ]
+    },
+    "test_s3": {
+      "file": "test_source3.tsv",
+      "total": 5082316,
+      "non_ascii_name_count": 737515,
+      "non_ascii_name_pct": 14.511,
+      "non_ascii_addr_count": 729222,
+      "non_ascii_addr_pct": 14.348,
+      "either_pct": 25.907,
+      "scripts": {
+        "devanagari": 7323141,
+        "other_unicode": 5768793,
+        "latin_accented": 660436
+      },
+      "sample_names": [
+        [
+          "\u092e\u0949\u0921\u0930\u094d\u0928 \u092b\u093e\u0907\u0928\u0947\u0902\u0938",
+          "India"
+        ],
+        [
+          "\u0b88\u0bb8\u0bcd\u0b9f\u0bb0\u0bcd\u0ba9\u0bcd \u0b95\u0ba9\u0bcd\u0b9a\u0bb2\u0bcd\u0b9f\u0ba9\u0bcd\u0b9a\u0bbf \u0baa\u0bbf\u0bb0\u0bc8\u0bb5\u0bc7\u0b9f\u0bcd \u0bb2\u0bbf\u0bae\u0bbf\u0b9f\u0bc6\u0b9f\u0bcd",
+          "India"
+        ],
+        [
+          "Sun \u092a\u093e\u0935\u0930 Provision",
+          "India"
+        ]
+      ],
+      "sample_addrs": [
+        [
+          "H.no 910 A 3503, Mumbai, \u092e\u0939\u093e\u0930\u093e\u0937\u094d\u091f\u094d\u0930",
+          "India"
+        ],
+        [
+          "G.t. Karnal Road, Industrial Area, New Delhi, null, A-68, \u0926\u093f\u0932\u094d\u0932\u0940",
+          "India"
+        ],
+        [
+          "#803 20/1, Bangalore South, Begur, \u0c95\u0cb0\u0ccd\u0ca8\u0cbe\u0c9f\u0c95",
+          "India"
+        ]
+      ]
+    }
+  },
+  "overlap_analysis": {
+    "total_unique_train_names": 9387251,
+    "total_unique_test_names": 8971579,
+    "shared_names_count": 685885,
+    "test_names_in_train_pct": 7.65,
+    "train_names_in_test_pct": 7.31,
+    "total_unique_train_addrs": 10584490,
+    "total_unique_test_addrs": 9894114,
+    "shared_addrs_count": 163213,
+    "test_addrs_in_train_pct": 1.65,
+    "s1_shared_names": 194461,
+    "test_s1_names_in_train_s1_pct": 15.7
+  }
+}

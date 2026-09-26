@@ -1,0 +1,242 @@
+{
+  "results_table": [
+    {
+      "union": "A",
+      "macro_f05": 0.417951,
+      "pooled_f05": 0.525759,
+      "precision": 0.805484,
+      "recall": 0.227319,
+      "cand_recall": 22.88,
+      "avg_cands_s1": 6.03,
+      "median_cands": 1,
+      "p95_cands": 30,
+      "singleton_acc": 0.834244,
+      "fn_damaged_entities": 4,
+      "singleton_damaged_entities": 182,
+      "total_pred_links": 20220
+    },
+    {
+      "union": "A+B",
+      "macro_f05": 0.464846,
+      "pooled_f05": 0.587331,
+      "precision": 0.801002,
+      "recall": 0.287155,
+      "cand_recall": 29.06,
+      "avg_cands_s1": 8.34,
+      "median_cands": 3,
+      "p95_cands": 30,
+      "singleton_acc": 0.788707,
+      "fn_damaged_entities": 80,
+      "singleton_damaged_entities": 232,
+      "total_pred_links": 24963
+    },
+    {
+      "union": "A+B+C",
+      "macro_f05": 0.709443,
+      "pooled_f05": 0.780902,
+      "precision": 0.854005,
+      "recall": 0.593375,
+      "cand_recall": 60.72,
+      "avg_cands_s1": 14.31,
+      "median_cands": 14,
+      "p95_cands": 36,
+      "singleton_acc": 0.733151,
+      "fn_damaged_entities": 371,
+      "singleton_damaged_entities": 293,
+      "total_pred_links": 48558
+    },
+    {
+      "union": "A+B+C+D+E",
+      "macro_f05": 0.74085,
+      "pooled_f05": 0.784775,
+      "precision": 0.810207,
+      "recall": 0.691761,
+      "cand_recall": 71.24,
+      "avg_cands_s1": 24.87,
+      "median_cands": 22,
+      "p95_cands": 53,
+      "singleton_acc": 0.571949,
+      "fn_damaged_entities": 641,
+      "singleton_damaged_entities": 470,
+      "total_pred_links": 59201
+    },
+    {
+      "union": "A+B+C+D+E+F+G",
+      "macro_f05": 0.75279,
+      "pooled_f05": 0.786712,
+      "precision": 0.797874,
+      "recall": 0.737917,
+      "cand_recall": 76.29,
+      "avg_cands_s1": 59.42,
+      "median_cands": 58,
+      "p95_cands": 92,
+      "singleton_acc": 0.519126,
+      "fn_damaged_entities": 875,
+      "singleton_damaged_entities": 528,
+      "total_pred_links": 64097
+    }
+  ],
+  "taxonomy": [
+    {
+      "category": "address_variation_different_locality",
+      "count": 273,
+      "percentage": 54.6,
+      "examples": [
+        {
+          "s1_id": "S1-529802541",
+          "cand_id": "S3-36582778",
+          "s1_name": "hewitt amalita dmd dds pc",
+          "cand_name": "hewitt amalita dmd dds llc",
+          "s1_addr": "Ardmore, 2413 Portico Avenue, OK",
+          "cand_addr": "2413 Portico Avenue, Ardmore, Oklahoma"
+        },
+        {
+          "s1_id": "S1-495465524",
+          "cand_id": "S2-266527441",
+          "s1_name": "dental center care",
+          "cand_name": "dental center care company",
+          "s1_addr": "913 Olrich Street, Rogers, AR",
+          "cand_addr": "ROGERS, AR, 913 OLRICH STREET"
+        },
+        {
+          "s1_id": "S1-367534426",
+          "cand_id": "S3-382427743",
+          "s1_name": "hotel infra private limited",
+          "cand_name": "hotel infra private",
+          "s1_addr": "Decent Tower, Scf 141 & 142, 3Rd Floor, Urban Estate, Phase-Ii, Focal Point, Ludhiana, Punjab",
+          "cand_addr": "H.no 211 Decent Tower, Scf 141 & 142, 3Rd Floor, Urban Estate, Phase-ii, Focal Point, Ludhiana, \u0a2a\u0a70\u0a1c\u0a3e\u0a2c"
+        }
+      ]
+    },
+    {
+      "category": "multilingual_transliteration",
+      "count": 139,
+      "percentage": 27.8,
+      "examples": [
+        {
+          "s1_id": "S1-430630889",
+          "cand_id": "S3-194622036",
+          "s1_name": "laxmi systems private limited",
+          "cand_name": "laxmi \u0ab8 \u0ab8 \u0a9f\u0aae \u0ab8 private limited",
+          "s1_addr": "Office No- Fifth Fl- 501, Hrishikesh Vasant Bag Opp. Water Tank, Gulbai Tekra, Ellisbrid, Ge, Ahmedabad, Gujarat",
+          "cand_addr": "Office No- Fifth Fl- 501, Ahmedabad, GJ"
+        },
+        {
+          "s1_id": "S1-562504740",
+          "cand_id": "S2-759697435",
+          "s1_name": "united media limited",
+          "cand_name": "\u092f \u0928 \u0907\u091f \u0921 \u092e \u0921 \u092f \u0932 \u092e \u091f \u0921",
+          "s1_addr": "A-64, Lgf Dda Shed, Okhla Industrial Area, Phase-, Ii, New Delhi, Delhi",
+          "cand_addr": "A-#64, II, NEW DELHI, Delhi"
+        },
+        {
+          "s1_id": "S1-918421887",
+          "cand_id": "S2-284855667",
+          "s1_name": "royal infra private limited",
+          "cand_name": "\u0930 \u092f\u0932 \u0907 \u092b \u0930 \u092a \u0930 \u0907\u0935 \u091f \u0932 \u092e \u091f \u0921",
+          "s1_addr": "4, Baravada House, Civil Lines, Jaipur, Rajasthan",
+          "cand_addr": "Rajasthan, 004, CIVIL LINES, DIVREPORTINGCIRCLE, BARAVADA HOUSE"
+        }
+      ]
+    },
+    {
+      "category": "heavy_spelling_or_ocr_typo",
+      "count": 67,
+      "percentage": 13.4,
+      "examples": [
+        {
+          "s1_id": "S1-719320413",
+          "cand_id": "S3-599122220",
+          "s1_name": "tirupati industries private limited",
+          "cand_name": "tirupatiindustriescom",
+          "s1_addr": "A-212C/Ug 05, Tirupati Plaza, Street No.1, Shakarpur, Delhi",
+          "cand_addr": "Street No.1, A-212c/ug 05, Shakarpur, DL"
+        },
+        {
+          "s1_id": "S1-829522279",
+          "cand_id": "S3-961986440",
+          "s1_name": "t aeon llc",
+          "cand_name": "center t llc",
+          "s1_addr": "106 Maple Street, Village Of Black Creek, WI",
+          "cand_addr": "00106 Maple St, Village Of Black Creek, Wisconsin"
+        },
+        {
+          "s1_id": "S1-132849101",
+          "cand_id": "S3-415153371",
+          "s1_name": "ridge sciences corporation",
+          "cand_name": "ridgesciences",
+          "s1_addr": "20117 136th Avenue, Woodinville, WA",
+          "cand_addr": "2011 136th Avenue, Woodinville, Washington"
+        }
+      ]
+    },
+    {
+      "category": "missing_address_components",
+      "count": 18,
+      "percentage": 3.6,
+      "examples": [
+        {
+          "s1_id": "S1-605858636",
+          "cand_id": "S3-660237355",
+          "s1_name": "silva capital pc",
+          "cand_name": "silva pc center",
+          "s1_addr": "OR, 16945 Anita Street, Portland",
+          "cand_addr": ""
+        },
+        {
+          "s1_id": "S1-319021795",
+          "cand_id": "S3-366629760",
+          "s1_name": "fresh energy company pc",
+          "cand_name": "fresh energy company",
+          "s1_addr": "507 Birch Avenue, Wellston, OK",
+          "cand_addr": ""
+        },
+        {
+          "s1_id": "S1-909448605",
+          "cand_id": "S2-51833788",
+          "s1_name": "sunrise infotech limited",
+          "cand_name": "sunrise inf0tech limited",
+          "s1_addr": "143D 4Th Floor, Khemka Bhavan Sitaram Podar Marg, Mumbai, Maharashtra",
+          "cand_addr": ""
+        }
+      ]
+    },
+    {
+      "category": "extreme_name_abbreviation",
+      "count": 3,
+      "percentage": 0.6,
+      "examples": [
+        {
+          "s1_id": "S1-703256163",
+          "cand_id": "S3-687046794",
+          "s1_name": "vijay infrastructure private limited",
+          "cand_name": "vi",
+          "s1_addr": "Dn-62, Tower-2/2B, Millenium City Sector V, Salt Lake, Kolkata, Kolkata, Howrah, West Bengal",
+          "cand_addr": "Dn-62, Tower-2/2B, Millenium City Sector V, Salt Lake, Kolkata, Kolkata, Howrah, West Bengal"
+        },
+        {
+          "s1_id": "S1-857925517",
+          "cand_id": "S2-564705412",
+          "s1_name": "monarch",
+          "cand_name": "modha",
+          "s1_addr": "VA, Fluvanna County, 3265 Ridge Road",
+          "cand_addr": "3265- RIDGE RD, FLUVANNA COUNTY, VA"
+        },
+        {
+          "s1_id": "S1-958734453",
+          "cand_id": "S3-354366766",
+          "s1_name": "vista",
+          "cand_name": "vieta",
+          "s1_addr": "103 Northview Drive, Monette, AR",
+          "cand_addr": "Arkansas, 10 Northview Dr, Monette"
+        }
+      ]
+    },
+    {
+      "category": "other_unclassified",
+      "count": 0,
+      "percentage": 0.0,
+      "examples": []
+    }
+  ]
+}

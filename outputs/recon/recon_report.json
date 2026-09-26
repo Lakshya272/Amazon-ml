@@ -1,0 +1,1037 @@
+{
+  "meta": {
+    "timestamp": "2026-09-25 10:12:44 UTC",
+    "data_dir": "/home/ec2-user/amazon-ml-challenge/student_resource/dataset",
+    "max_rows": null,
+    "total_elapsed_seconds": 491.71
+  },
+  "sources": {
+    "train_source1": {
+      "file_name": "train_source1.tsv",
+      "row_count": 2206821,
+      "elapsed_seconds": 42.27,
+      "schema": {
+        "header": [
+          "entity_id",
+          "business_name",
+          "business_address",
+          "country"
+        ],
+        "is_valid": true,
+        "bad_rows": 0
+      },
+      "id_stats": {
+        "total_ids": 2206821,
+        "unique_ids": 2206821,
+        "duplicate_ids": 0,
+        "uniqueness_rate": 1.0
+      },
+      "country_distribution": {
+        "US": {
+          "count": 1323633,
+          "percentage": 59.9792
+        },
+        "India": {
+          "count": 883188,
+          "percentage": 40.0208
+        }
+      },
+      "missingness": {
+        "missing_name_count": 0,
+        "missing_name_rate": 0.0,
+        "missing_address_count": 0,
+        "missing_address_rate": 0.0,
+        "both_missing_count": 0,
+        "both_missing_rate": 0.0
+      },
+      "name_lengths": {
+        "char_stats": {
+          "count": 2206821,
+          "min": 3,
+          "max": 105,
+          "mean": 24.03,
+          "std": 7.74,
+          "p10": 14,
+          "p25": 18,
+          "p50": 24,
+          "p75": 30,
+          "p90": 34,
+          "p99": 42
+        },
+        "token_stats": {
+          "count": 2206821,
+          "min": 1,
+          "max": 16,
+          "mean": 3.55,
+          "std": 0.98,
+          "p10": 2,
+          "p25": 3,
+          "p50": 4,
+          "p75": 4,
+          "p90": 5,
+          "p99": 6
+        }
+      },
+      "address_lengths": {
+        "char_stats": {
+          "count": 2206821,
+          "min": 11,
+          "max": 256,
+          "mean": 52.07,
+          "std": 25.33,
+          "p10": 29,
+          "p25": 33,
+          "p50": 41,
+          "p75": 70,
+          "p90": 90,
+          "p99": 124
+        },
+        "token_stats": {
+          "count": 2206821,
+          "min": 2,
+          "max": 43,
+          "mean": 8.03,
+          "std": 3.51,
+          "p10": 5,
+          "p25": 5,
+          "p50": 7,
+          "p75": 10,
+          "p90": 13,
+          "p99": 19
+        }
+      },
+      "address_structural_signals": {
+        "has_digits_rate": 0.9651,
+        "has_comma_rate": 1.0,
+        "us_zip_matches_rate": 0.1082,
+        "in_pin_matches_rate": 0.0,
+        "fr_postal_matches_rate": 0.0
+      },
+      "duplicates": {
+        "norm1_name": {
+          "unique_values": 1538804,
+          "duplicate_records_count": 846097,
+          "duplicate_rate": 0.3834,
+          "max_frequency": 253
+        },
+        "norm2_name_alphanumeric": {
+          "unique_values": 1520684,
+          "duplicate_records_count": 866894,
+          "duplicate_rate": 0.3928,
+          "max_frequency": 253
+        },
+        "norm1_address": {
+          "unique_values": 2130606,
+          "duplicate_records_count": 116304,
+          "duplicate_rate": 0.0527,
+          "max_frequency": 14
+        },
+        "norm1_name_and_address": {
+          "unique_values": 2206821,
+          "duplicate_records_count": 0,
+          "duplicate_rate": 0.0,
+          "max_frequency": 1
+        }
+      },
+      "sample_frequent_names": {
+        "horizon llc": 5,
+        "office of aging": 5,
+        "eye group": 5,
+        "stag llc": 5,
+        "board of public works": 5,
+        "urgent care medicine": 5,
+        "primary care group": 5,
+        "commission on public works": 5,
+        "physical therapy group": 5,
+        "dermatology group": 5
+      },
+      "sample_frequent_addresses": {
+        "h. no. 154 - a, veer savarkar nagar, mini bypass road, p/o izzatnagar, bareilly, uttar pradesh": 3,
+        "21646 cottonwood meadows trail, waller, tx": 3,
+        "no. 109, ferns meadows, avalahalli main road, bileshivale, bangalore north, bangalore, karnataka": 3,
+        "4804 gardenia avenue, glendale, az": 3,
+        "218 phillips street, storm lake, ia": 3,
+        "1292 mason lake road, berea, ky": 3,
+        "123 3rd street, molalla, or": 3,
+        "44 winifred drive, hempstead, ny": 3,
+        "2690 23rd street, tuscaloosa, al": 3,
+        "104 roadrunner circle, elephant butte, nm": 3
+      }
+    },
+    "train_source2": {
+      "file_name": "train_source2.tsv",
+      "row_count": 5034616,
+      "elapsed_seconds": 98.48,
+      "schema": {
+        "header": [
+          "entity_id",
+          "business_name",
+          "business_address",
+          "country"
+        ],
+        "is_valid": true,
+        "bad_rows": 0
+      },
+      "id_stats": {
+        "total_ids": 5034616,
+        "unique_ids": 5034616,
+        "duplicate_ids": 0,
+        "uniqueness_rate": 1.0
+      },
+      "country_distribution": {
+        "US": {
+          "count": 3016817,
+          "percentage": 59.9215
+        },
+        "India": {
+          "count": 2017799,
+          "percentage": 40.0785
+        }
+      },
+      "missingness": {
+        "missing_name_count": 0,
+        "missing_name_rate": 0.0,
+        "missing_address_count": 168967,
+        "missing_address_rate": 0.033561,
+        "both_missing_count": 0,
+        "both_missing_rate": 0.0
+      },
+      "name_lengths": {
+        "char_stats": {
+          "count": 5034616,
+          "min": 2,
+          "max": 104,
+          "mean": 25.1,
+          "std": 8.89,
+          "p10": 14,
+          "p25": 19,
+          "p50": 25,
+          "p75": 31,
+          "p90": 37,
+          "p99": 48
+        },
+        "token_stats": {
+          "count": 5034616,
+          "min": 1,
+          "max": 15,
+          "mean": 3.5,
+          "std": 1.24,
+          "p10": 2,
+          "p25": 3,
+          "p50": 4,
+          "p75": 4,
+          "p90": 5,
+          "p99": 6
+        }
+      },
+      "address_lengths": {
+        "char_stats": {
+          "count": 4865649,
+          "min": 8,
+          "max": 249,
+          "mean": 47.83,
+          "std": 23.7,
+          "p10": 27,
+          "p25": 31,
+          "p50": 37,
+          "p75": 63,
+          "p90": 84,
+          "p99": 118
+        },
+        "token_stats": {
+          "count": 4865649,
+          "min": 2,
+          "max": 46,
+          "mean": 7.54,
+          "std": 3.37,
+          "p10": 5,
+          "p25": 5,
+          "p50": 6,
+          "p75": 9,
+          "p90": 13,
+          "p99": 18
+        }
+      },
+      "address_structural_signals": {
+        "has_digits_rate": 0.9379,
+        "has_comma_rate": 1.0,
+        "us_zip_matches_rate": 0.1013,
+        "in_pin_matches_rate": 0.0,
+        "fr_postal_matches_rate": 0.0
+      },
+      "duplicates": {
+        "norm1_name": {
+          "unique_values": 4192965,
+          "duplicate_records_count": 1169380,
+          "duplicate_rate": 0.2323,
+          "max_frequency": 464
+        },
+        "norm2_name_alphanumeric": {
+          "unique_values": 4025056,
+          "duplicate_records_count": 1403712,
+          "duplicate_rate": 0.2788,
+          "max_frequency": 526
+        },
+        "norm1_address": {
+          "unique_values": 4300098,
+          "duplicate_records_count": 1013344,
+          "duplicate_rate": 0.2083,
+          "max_frequency": 19
+        },
+        "norm1_name_and_address": {
+          "unique_values": 4818746,
+          "duplicate_records_count": 92199,
+          "duplicate_rate": 0.0189,
+          "max_frequency": 5
+        }
+      },
+      "sample_frequent_names": {
+        "physical therapy": 5,
+        "urology center": 5,
+        "vision care": 5,
+        "main street": 5,
+        "new delhi": 5,
+        "behavioral health": 5,
+        "ear nose & throat": 5,
+        "office of": 5,
+        "pediatric dentistry": 5,
+        "bureau of": 5
+      },
+      "sample_frequent_addresses": {
+        "17825 114nd pl, renton, wa": 3,
+        "4157 hwy 65, clinton, ar": 3,
+        "01859 lawndale avenue, chicago, il": 3,
+        "c.s.no b3/115/1/2/a/1, malkapur, maharashtra": 3,
+        "17200 bell rd, surprise, az": 3,
+        "3735 las pasas way, sarcamento city, ca": 3,
+        "g-58/1, benson cross road, bangalore., karnataka": 3,
+        "906- merlin roost, katy, tx": 3,
+        "9215 seven hills curve, mobile, al": 3,
+        "block f-857 c-902 tridev aptsbhakti marg mulund (w), mumbai, maharashtra": 3
+      }
+    },
+    "train_source3": {
+      "file_name": "train_source3.tsv",
+      "row_count": 5285603,
+      "elapsed_seconds": 106.41,
+      "schema": {
+        "header": [
+          "entity_id",
+          "business_name",
+          "business_address",
+          "country"
+        ],
+        "is_valid": true,
+        "bad_rows": 0
+      },
+      "id_stats": {
+        "total_ids": 5285603,
+        "unique_ids": 5285603,
+        "duplicate_ids": 0,
+        "uniqueness_rate": 1.0
+      },
+      "country_distribution": {
+        "US": {
+          "count": 3170056,
+          "percentage": 59.9753
+        },
+        "India": {
+          "count": 2115547,
+          "percentage": 40.0247
+        }
+      },
+      "missingness": {
+        "missing_name_count": 0,
+        "missing_name_rate": 0.0,
+        "missing_address_count": 175916,
+        "missing_address_rate": 0.033282,
+        "both_missing_count": 0,
+        "both_missing_rate": 0.0
+      },
+      "name_lengths": {
+        "char_stats": {
+          "count": 5285603,
+          "min": 2,
+          "max": 123,
+          "mean": 25.2,
+          "std": 9.49,
+          "p10": 14,
+          "p25": 18,
+          "p50": 25,
+          "p75": 31,
+          "p90": 37,
+          "p99": 50
+        },
+        "token_stats": {
+          "count": 5285603,
+          "min": 1,
+          "max": 18,
+          "mean": 3.53,
+          "std": 1.34,
+          "p10": 2,
+          "p25": 3,
+          "p50": 4,
+          "p75": 4,
+          "p90": 5,
+          "p99": 7
+        }
+      },
+      "address_lengths": {
+        "char_stats": {
+          "count": 5109687,
+          "min": 2,
+          "max": 240,
+          "mean": 48.32,
+          "std": 20.18,
+          "p10": 30,
+          "p25": 35,
+          "p50": 42,
+          "p75": 55,
+          "p90": 78,
+          "p99": 116
+        },
+        "token_stats": {
+          "count": 5109687,
+          "min": 1,
+          "max": 43,
+          "mean": 7.42,
+          "std": 3.17,
+          "p10": 5,
+          "p25": 5,
+          "p50": 6,
+          "p75": 9,
+          "p90": 12,
+          "p99": 18
+        }
+      },
+      "address_structural_signals": {
+        "has_digits_rate": 0.9393,
+        "has_comma_rate": 1.0,
+        "us_zip_matches_rate": 0.1017,
+        "in_pin_matches_rate": 0.0,
+        "fr_postal_matches_rate": 0.0
+      },
+      "duplicates": {
+        "norm1_name": {
+          "unique_values": 4473473,
+          "duplicate_records_count": 1138818,
+          "duplicate_rate": 0.2155,
+          "max_frequency": 462
+        },
+        "norm2_name_alphanumeric": {
+          "unique_values": 4280399,
+          "duplicate_records_count": 1405225,
+          "duplicate_rate": 0.2659,
+          "max_frequency": 521
+        },
+        "norm1_address": {
+          "unique_values": 4631187,
+          "duplicate_records_count": 862505,
+          "duplicate_rate": 0.1688,
+          "max_frequency": 29
+        },
+        "norm1_name_and_address": {
+          "unique_values": 5077255,
+          "duplicate_records_count": 63871,
+          "duplicate_rate": 0.0125,
+          "max_frequency": 4
+        }
+      },
+      "sample_frequent_names": {
+        "internal medicine": 5,
+        "eye partners": 5,
+        "physical therapy": 5,
+        "dermatology care": 5,
+        "foot & ankle": 5,
+        "orthopedic group": 5,
+        "supreme": 5,
+        "cornerstone": 5,
+        "office of": 5,
+        "rev it up": 5
+      },
+      "sample_frequent_addresses": {
+        "3, mumbai, mh": 3,
+        "1948. weaver forest way, morrisville, north carolina": 3,
+        "1, chennai, tn": 3,
+        "3040 sawyer, mesa, arizona": 3,
+        "303, mumbai, mumbai city, mh": 3,
+        "1316 lantern way, mrehead city, north carolina": 3,
+        "41, kolkata, howrah, wb": 3,
+        "25, mumbai, mumbai city, mh": 3,
+        "104 county rd 169, athens, tennessee": 3,
+        "303, ahmedabad, gj": 3
+      }
+    },
+    "test_source1": {
+      "file_name": "test_source1.tsv",
+      "row_count": 1732544,
+      "elapsed_seconds": 33.47,
+      "schema": {
+        "header": [
+          "entity_id",
+          "business_name",
+          "business_address",
+          "country"
+        ],
+        "is_valid": true,
+        "bad_rows": 0
+      },
+      "id_stats": {
+        "total_ids": 1732544,
+        "unique_ids": 1732544,
+        "duplicate_ids": 0,
+        "uniqueness_rate": 1.0
+      },
+      "country_distribution": {
+        "India": {
+          "count": 809986,
+          "percentage": 46.7513
+        },
+        "US": {
+          "count": 663106,
+          "percentage": 38.2735
+        },
+        "France": {
+          "count": 259452,
+          "percentage": 14.9752
+        }
+      },
+      "missingness": {
+        "missing_name_count": 0,
+        "missing_name_rate": 0.0,
+        "missing_address_count": 0,
+        "missing_address_rate": 0.0,
+        "both_missing_count": 0,
+        "both_missing_rate": 0.0
+      },
+      "name_lengths": {
+        "char_stats": {
+          "count": 1732544,
+          "min": 3,
+          "max": 92,
+          "mean": 23.84,
+          "std": 7.67,
+          "p10": 14,
+          "p25": 18,
+          "p50": 24,
+          "p75": 29,
+          "p90": 34,
+          "p99": 42
+        },
+        "token_stats": {
+          "count": 1732544,
+          "min": 1,
+          "max": 14,
+          "mean": 3.52,
+          "std": 0.92,
+          "p10": 2,
+          "p25": 3,
+          "p50": 4,
+          "p75": 4,
+          "p90": 5,
+          "p99": 6
+        }
+      },
+      "address_lengths": {
+        "char_stats": {
+          "count": 1732544,
+          "min": 11,
+          "max": 268,
+          "mean": 57.21,
+          "std": 25.03,
+          "p10": 31,
+          "p25": 36,
+          "p50": 50,
+          "p75": 74,
+          "p90": 93,
+          "p99": 126
+        },
+        "token_stats": {
+          "count": 1732544,
+          "min": 2,
+          "max": 43,
+          "mean": 8.59,
+          "std": 3.58,
+          "p10": 5,
+          "p25": 6,
+          "p50": 8,
+          "p75": 11,
+          "p90": 14,
+          "p99": 19
+        }
+      },
+      "address_structural_signals": {
+        "has_digits_rate": 0.9585,
+        "has_comma_rate": 1.0,
+        "us_zip_matches_rate": 0.1082,
+        "in_pin_matches_rate": 0.0,
+        "fr_postal_matches_rate": 0.0039
+      },
+      "duplicates": {
+        "norm1_name": {
+          "unique_values": 1238244,
+          "duplicate_records_count": 624683,
+          "duplicate_rate": 0.3606,
+          "max_frequency": 205
+        },
+        "norm2_name_alphanumeric": {
+          "unique_values": 1228140,
+          "duplicate_records_count": 636528,
+          "duplicate_rate": 0.3674,
+          "max_frequency": 205
+        },
+        "norm1_address": {
+          "unique_values": 1674541,
+          "duplicate_records_count": 91705,
+          "duplicate_rate": 0.0529,
+          "max_frequency": 101
+        },
+        "norm1_name_and_address": {
+          "unique_values": 1732544,
+          "duplicate_records_count": 0,
+          "duplicate_rate": 0.0,
+          "max_frequency": 1
+        }
+      },
+      "sample_frequent_names": {
+        "urgent care group": 5,
+        "bordeaux club sarl": 5,
+        "eye group": 5,
+        "nantes club sas": 5,
+        "nantes club sarl": 5,
+        "bordeaux club sas": 5,
+        "lille club sarl": 5,
+        "pediatric group": 5,
+        "pediatric dental group": 5,
+        "bordeaux amicale sarl": 5
+      },
+      "sample_frequent_addresses": {
+        "12 rue lyderic, lille, hauts-de-france": 5,
+        "30 rue des meuniers, lille, hauts-de-france": 4,
+        "27 rue jean bart, maison des associations, lille, hauts-de-france": 4,
+        "100 rue de lille, tourcoing, hauts-de-france": 4,
+        "27 rue jean bart, lille, hauts-de-france": 4,
+        "3 rue de la digue, lille, hauts-de-france": 3,
+        "6 rue de la basse masure, roubaix, hauts-de-france": 3,
+        "4 rue de la perverie, nantes, pays de la loire": 3,
+        "24 pl de la liberte, maison des associations, roubaix, hauts-de-france": 3,
+        "lille, hauts-de-france": 3
+      }
+    },
+    "test_source2": {
+      "file_name": "test_source2.tsv",
+      "row_count": 4887273,
+      "elapsed_seconds": 99.22,
+      "schema": {
+        "header": [
+          "entity_id",
+          "business_name",
+          "business_address",
+          "country"
+        ],
+        "is_valid": true,
+        "bad_rows": 0
+      },
+      "id_stats": {
+        "total_ids": 4887273,
+        "unique_ids": 4887273,
+        "duplicate_ids": 0,
+        "uniqueness_rate": 1.0
+      },
+      "country_distribution": {
+        "India": {
+          "count": 2312565,
+          "percentage": 47.3181
+        },
+        "US": {
+          "count": 1871330,
+          "percentage": 38.2899
+        },
+        "France": {
+          "count": 703378,
+          "percentage": 14.392
+        }
+      },
+      "missingness": {
+        "missing_name_count": 0,
+        "missing_name_rate": 0.0,
+        "missing_address_count": 129408,
+        "missing_address_rate": 0.026479,
+        "both_missing_count": 0,
+        "both_missing_rate": 0.0
+      },
+      "name_lengths": {
+        "char_stats": {
+          "count": 4887273,
+          "min": 2,
+          "max": 102,
+          "mean": 25.7,
+          "std": 9.12,
+          "p10": 14,
+          "p25": 19,
+          "p50": 25,
+          "p75": 32,
+          "p90": 38,
+          "p99": 49
+        },
+        "token_stats": {
+          "count": 4887273,
+          "min": 1,
+          "max": 15,
+          "mean": 3.59,
+          "std": 1.2,
+          "p10": 2,
+          "p25": 3,
+          "p50": 4,
+          "p75": 4,
+          "p90": 5,
+          "p99": 6
+        }
+      },
+      "address_lengths": {
+        "char_stats": {
+          "count": 4757865,
+          "min": 5,
+          "max": 269,
+          "mean": 51.78,
+          "std": 24.27,
+          "p10": 28,
+          "p25": 32,
+          "p50": 43,
+          "p75": 68,
+          "p90": 87,
+          "p99": 120
+        },
+        "token_stats": {
+          "count": 4757865,
+          "min": 1,
+          "max": 43,
+          "mean": 8.01,
+          "std": 3.51,
+          "p10": 5,
+          "p25": 5,
+          "p50": 7,
+          "p75": 10,
+          "p90": 13,
+          "p99": 19
+        }
+      },
+      "address_structural_signals": {
+        "has_digits_rate": 0.9519,
+        "has_comma_rate": 1.0,
+        "us_zip_matches_rate": 0.1034,
+        "in_pin_matches_rate": 0.0,
+        "fr_postal_matches_rate": 0.005
+      },
+      "duplicates": {
+        "norm1_name": {
+          "unique_values": 4129352,
+          "duplicate_records_count": 1061622,
+          "duplicate_rate": 0.2172,
+          "max_frequency": 302
+        },
+        "norm2_name_alphanumeric": {
+          "unique_values": 4006338,
+          "duplicate_records_count": 1237006,
+          "duplicate_rate": 0.2531,
+          "max_frequency": 302
+        },
+        "norm1_address": {
+          "unique_values": 4182032,
+          "duplicate_records_count": 1051981,
+          "duplicate_rate": 0.2211,
+          "max_frequency": 90
+        },
+        "norm1_name_and_address": {
+          "unique_values": 4717874,
+          "duplicate_records_count": 78561,
+          "duplicate_rate": 0.0165,
+          "max_frequency": 5
+        }
+      },
+      "sample_frequent_names": {
+        "cf": 5,
+        "back alley": 5,
+        "main street": 5,
+        "lille comite": 5,
+        "bordeaux club sarl": 5,
+        "tc": 5,
+        "board of": 5,
+        "pc": 5,
+        "internal medicine": 5,
+        "cs": 5
+      },
+      "sample_frequent_addresses": {
+        "100 rue de lille, tourcoing, hauts-de-france": 4,
+        "27 rue jean bart, lille": 4,
+        "bordeaux": 4,
+        "calais": 4,
+        "rue lyderic, lille": 4,
+        "calais, pas-de-calais": 4,
+        "30 rue des meuniers, lille": 4,
+        "calais, hauts-de-france": 4,
+        "27 r. jean bart, maison des associations, lille": 3,
+        "lille, 27 rue jean bart": 3
+      }
+    },
+    "test_source3": {
+      "file_name": "test_source3.tsv",
+      "row_count": 5082316,
+      "elapsed_seconds": 98.05,
+      "schema": {
+        "header": [
+          "entity_id",
+          "business_name",
+          "business_address",
+          "country"
+        ],
+        "is_valid": true,
+        "bad_rows": 0
+      },
+      "id_stats": {
+        "total_ids": 5082316,
+        "unique_ids": 5082316,
+        "duplicate_ids": 0,
+        "uniqueness_rate": 1.0
+      },
+      "country_distribution": {
+        "India": {
+          "count": 2405000,
+          "percentage": 47.3209
+        },
+        "US": {
+          "count": 1945701,
+          "percentage": 38.2837
+        },
+        "France": {
+          "count": 731615,
+          "percentage": 14.3953
+        }
+      },
+      "missingness": {
+        "missing_name_count": 0,
+        "missing_name_rate": 0.0,
+        "missing_address_count": 136098,
+        "missing_address_rate": 0.026779,
+        "both_missing_count": 0,
+        "both_missing_rate": 0.0
+      },
+      "name_lengths": {
+        "char_stats": {
+          "count": 5082316,
+          "min": 2,
+          "max": 103,
+          "mean": 25.66,
+          "std": 9.57,
+          "p10": 14,
+          "p25": 19,
+          "p50": 25,
+          "p75": 32,
+          "p90": 38,
+          "p99": 50
+        },
+        "token_stats": {
+          "count": 5082316,
+          "min": 1,
+          "max": 16,
+          "mean": 3.6,
+          "std": 1.29,
+          "p10": 2,
+          "p25": 3,
+          "p50": 4,
+          "p75": 4,
+          "p90": 5,
+          "p99": 7
+        }
+      },
+      "address_lengths": {
+        "char_stats": {
+          "count": 4946218,
+          "min": 5,
+          "max": 267,
+          "mean": 50.08,
+          "std": 21.44,
+          "p10": 29,
+          "p25": 36,
+          "p50": 44,
+          "p75": 59,
+          "p90": 82,
+          "p99": 118
+        },
+        "token_stats": {
+          "count": 4946218,
+          "min": 1,
+          "max": 43,
+          "mean": 7.72,
+          "std": 3.36,
+          "p10": 5,
+          "p25": 5,
+          "p50": 7,
+          "p75": 9,
+          "p90": 13,
+          "p99": 19
+        }
+      },
+      "address_structural_signals": {
+        "has_digits_rate": 0.9504,
+        "has_comma_rate": 1.0,
+        "us_zip_matches_rate": 0.1041,
+        "in_pin_matches_rate": 0.0,
+        "fr_postal_matches_rate": 0.0051
+      },
+      "duplicates": {
+        "norm1_name": {
+          "unique_values": 4357464,
+          "duplicate_records_count": 1026371,
+          "duplicate_rate": 0.2019,
+          "max_frequency": 387
+        },
+        "norm2_name_alphanumeric": {
+          "unique_values": 4212813,
+          "duplicate_records_count": 1227812,
+          "duplicate_rate": 0.2416,
+          "max_frequency": 389
+        },
+        "norm1_address": {
+          "unique_values": 4450182,
+          "duplicate_records_count": 905048,
+          "duplicate_rate": 0.183,
+          "max_frequency": 89
+        },
+        "norm1_name_and_address": {
+          "unique_values": 4918083,
+          "duplicate_records_count": 55340,
+          "duplicate_rate": 0.0112,
+          "max_frequency": 4
+        }
+      },
+      "sample_frequent_names": {
+        "shree": 5,
+        "pediatric": 5,
+        "pc": 5,
+        "pa": 5,
+        "maison": 5,
+        "internal medicine": 5,
+        "ec": 5,
+        "fc": 5,
+        "ss": 5,
+        "primary care": 5
+      },
+      "sample_frequent_addresses": {
+        "bordeaux, gironde": 4,
+        "calais": 4,
+        "calais, hauts-de-france": 4,
+        "calais, pas-de-calais": 4,
+        "12 rue lyderic, lille, nord": 4,
+        "30 rue des meuniers, lille, hauts-de-france": 4,
+        "27 rue jean bart, lille": 4,
+        "20, mumbai, mumbai city, mh": 3,
+        "first floor, chennai, tn": 3,
+        "10, mumbai, mh": 3
+      }
+    }
+  },
+  "ground_truth": {
+    "file_name": "train_ground_truth.tsv",
+    "row_count": 2206821,
+    "elapsed_seconds": 12.6,
+    "schema": {
+      "header": [
+        "source1_entity_id",
+        "matched_entity_ids"
+      ],
+      "is_valid": true,
+      "bad_rows": 0
+    },
+    "s1_id_uniqueness": {
+      "total_rows": 2206821,
+      "unique_s1_ids": 2206821,
+      "duplicate_s1_rows": 0
+    },
+    "links_summary": {
+      "total_ground_truth_links": 7638365,
+      "average_links_per_s1": 3.46125,
+      "links_to_source2": 3693619,
+      "links_to_source2_pct": 48.3561,
+      "links_to_source3": 3944746,
+      "links_to_source3_pct": 51.6439,
+      "links_to_unexpected_source": 0,
+      "internal_duplicate_matched_ids_in_row": 0
+    },
+    "match_count_distribution": {
+      "0": {
+        "s1_entities": 123247,
+        "percentage": 5.5848
+      },
+      "1": {
+        "s1_entities": 119157,
+        "percentage": 5.3995
+      },
+      "2": {
+        "s1_entities": 375212,
+        "percentage": 17.0024
+      },
+      "3": {
+        "s1_entities": 530841,
+        "percentage": 24.0546
+      },
+      "4": {
+        "s1_entities": 484115,
+        "percentage": 21.9372
+      },
+      "5": {
+        "s1_entities": 321957,
+        "percentage": 14.5892
+      },
+      "6": {
+        "s1_entities": 164868,
+        "percentage": 7.4708
+      },
+      "7": {
+        "s1_entities": 63968,
+        "percentage": 2.8986
+      },
+      "8": {
+        "s1_entities": 18680,
+        "percentage": 0.8465
+      },
+      "9": {
+        "s1_entities": 4205,
+        "percentage": 0.1905
+      },
+      "10": {
+        "s1_entities": 534,
+        "percentage": 0.0242
+      },
+      "11": {
+        "s1_entities": 37,
+        "percentage": 0.0017
+      }
+    },
+    "singleton_rate": 0.055848,
+    "match_composition": {
+      "singleton_zero_matches": {
+        "count": 123247,
+        "percentage": 5.5848
+      },
+      "s2_only": {
+        "count": 143029,
+        "percentage": 6.4812
+      },
+      "s3_only": {
+        "count": 164498,
+        "percentage": 7.4541
+      },
+      "both_s2_and_s3": {
+        "count": 1776047,
+        "percentage": 80.4799
+      }
+    },
+    "country_integrity": {
+      "same_country_matches": 7638365,
+      "cross_country_matches": 0,
+      "unknown_country_matches": 0,
+      "cross_country_rate": 0.0
+    }
+  }
+}

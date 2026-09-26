@@ -1,0 +1,425 @@
+[
+  {
+    "mode": "exact_raw_name",
+    "elapsed_seconds": 147.87,
+    "total_s1_evaluated": 2206821,
+    "macro_f05": 0.105351,
+    "pooled_f05": 0.05252,
+    "pooled_precision": 0.054878,
+    "pooled_recall": 0.044816,
+    "macro_precision_on_predicted": 0.261936,
+    "macro_recall_on_true_matches": 0.044873,
+    "total_true_links": 7638365,
+    "total_pred_links": 6237812,
+    "total_recovered_links": 342321,
+    "total_false_positives": 5895491,
+    "total_false_negatives": 7296044,
+    "s1_with_predictions": 790301,
+    "s1_with_predictions_pct": 35.81,
+    "avg_pred_links_per_s1": 2.8266,
+    "max_pred_links_single_s1": 50,
+    "true_singletons": 123247,
+    "predicted_singletons": 1416520,
+    "correct_singletons": 89361,
+    "false_merge_singletons": 33886,
+    "singleton_accuracy": 0.725056,
+    "f05_distribution": {
+      "f05_exact_1.0": {
+        "count": 93977,
+        "percentage": 4.26
+      },
+      "f05_0.8_to_1.0": {
+        "count": 30772,
+        "percentage": 1.39
+      },
+      "f05_0.5_to_0.8": {
+        "count": 145918,
+        "percentage": 6.61
+      },
+      "f05_0.0_to_0.5": {
+        "count": 106194,
+        "percentage": 4.81
+      },
+      "f05_exact_0.0": {
+        "count": 1829960,
+        "percentage": 82.92
+      }
+    }
+  },
+  {
+    "mode": "exact_base_name",
+    "elapsed_seconds": 147.87,
+    "total_s1_evaluated": 2206821,
+    "macro_f05": 0.255692,
+    "pooled_f05": 0.113571,
+    "pooled_precision": 0.106695,
+    "pooled_recall": 0.153016,
+    "macro_precision_on_predicted": 0.489418,
+    "macro_recall_on_true_matches": 0.153167,
+    "total_true_links": 7638365,
+    "total_pred_links": 10954553,
+    "total_recovered_links": 1168793,
+    "total_false_positives": 9785760,
+    "total_false_negatives": 6469572,
+    "s1_with_predictions": 1360433,
+    "s1_with_predictions_pct": 61.65,
+    "avg_pred_links_per_s1": 4.964,
+    "max_pred_links_single_s1": 50,
+    "true_singletons": 123247,
+    "predicted_singletons": 846388,
+    "correct_singletons": 80303,
+    "false_merge_singletons": 42944,
+    "singleton_accuracy": 0.651561,
+    "f05_distribution": {
+      "f05_exact_1.0": {
+        "count": 102228,
+        "percentage": 4.63
+      },
+      "f05_0.8_to_1.0": {
+        "count": 143254,
+        "percentage": 6.49
+      },
+      "f05_0.5_to_0.8": {
+        "count": 440555,
+        "percentage": 19.96
+      },
+      "f05_0.0_to_0.5": {
+        "count": 272778,
+        "percentage": 12.36
+      },
+      "f05_exact_0.0": {
+        "count": 1248006,
+        "percentage": 56.55
+      }
+    }
+  },
+  {
+    "mode": "exact_clean_name",
+    "elapsed_seconds": 147.87,
+    "total_s1_evaluated": 2206821,
+    "macro_f05": 0.317557,
+    "pooled_f05": 0.129271,
+    "pooled_precision": 0.118065,
+    "pooled_recall": 0.20839,
+    "macro_precision_on_predicted": 0.53086,
+    "macro_recall_on_true_matches": 0.208562,
+    "total_true_links": 7638365,
+    "total_pred_links": 13482057,
+    "total_recovered_links": 1591759,
+    "total_false_positives": 11890298,
+    "total_false_negatives": 6046606,
+    "s1_with_predictions": 1559200,
+    "s1_with_predictions_pct": 70.65,
+    "avg_pred_links_per_s1": 6.1093,
+    "max_pred_links_single_s1": 50,
+    "true_singletons": 123247,
+    "predicted_singletons": 647621,
+    "correct_singletons": 76831,
+    "false_merge_singletons": 46416,
+    "singleton_accuracy": 0.62339,
+    "f05_distribution": {
+      "f05_exact_1.0": {
+        "count": 111958,
+        "percentage": 5.07
+      },
+      "f05_0.8_to_1.0": {
+        "count": 218414,
+        "percentage": 9.9
+      },
+      "f05_0.5_to_0.8": {
+        "count": 511222,
+        "percentage": 23.17
+      },
+      "f05_0.0_to_0.5": {
+        "count": 341428,
+        "percentage": 15.47
+      },
+      "f05_exact_0.0": {
+        "count": 1023799,
+        "percentage": 46.39
+      }
+    }
+  },
+  {
+    "mode": "exact_legal_name",
+    "elapsed_seconds": 147.87,
+    "total_s1_evaluated": 2206821,
+    "macro_f05": 0.34111,
+    "pooled_f05": 0.123255,
+    "pooled_precision": 0.110125,
+    "pooled_recall": 0.235633,
+    "macro_precision_on_predicted": 0.540334,
+    "macro_recall_on_true_matches": 0.235625,
+    "total_true_links": 7638365,
+    "total_pred_links": 16343691,
+    "total_recovered_links": 1799853,
+    "total_false_positives": 14543838,
+    "total_false_negatives": 5838512,
+    "s1_with_predictions": 1637623,
+    "s1_with_predictions_pct": 74.21,
+    "avg_pred_links_per_s1": 7.406,
+    "max_pred_links_single_s1": 50,
+    "true_singletons": 123247,
+    "predicted_singletons": 569198,
+    "correct_singletons": 75149,
+    "false_merge_singletons": 48098,
+    "singleton_accuracy": 0.609743,
+    "f05_distribution": {
+      "f05_exact_1.0": {
+        "count": 117090,
+        "percentage": 5.31
+      },
+      "f05_0.8_to_1.0": {
+        "count": 254300,
+        "percentage": 11.52
+      },
+      "f05_0.5_to_0.8": {
+        "count": 528441,
+        "percentage": 23.95
+      },
+      "f05_0.0_to_0.5": {
+        "count": 384649,
+        "percentage": 17.43
+      },
+      "f05_exact_0.0": {
+        "count": 922341,
+        "percentage": 41.8
+      }
+    }
+  },
+  {
+    "mode": "exact_raw_address",
+    "elapsed_seconds": 147.87,
+    "total_s1_evaluated": 2206821,
+    "macro_f05": 0.101446,
+    "pooled_f05": 0.100537,
+    "pooled_precision": 0.829714,
+    "pooled_recall": 0.022266,
+    "macro_precision_on_predicted": 0.856322,
+    "macro_recall_on_true_matches": 0.020649,
+    "total_true_links": 7638365,
+    "total_pred_links": 204979,
+    "total_recovered_links": 170074,
+    "total_false_positives": 34905,
+    "total_false_negatives": 7468291,
+    "s1_with_predictions": 196678,
+    "s1_with_predictions_pct": 8.91,
+    "avg_pred_links_per_s1": 0.0929,
+    "max_pred_links_single_s1": 6,
+    "true_singletons": 123247,
+    "predicted_singletons": 2010143,
+    "correct_singletons": 121509,
+    "false_merge_singletons": 1738,
+    "singleton_accuracy": 0.985898,
+    "f05_distribution": {
+      "f05_exact_1.0": {
+        "count": 122773,
+        "percentage": 5.56
+      },
+      "f05_0.8_to_1.0": {
+        "count": 10765,
+        "percentage": 0.49
+      },
+      "f05_0.5_to_0.8": {
+        "count": 138214,
+        "percentage": 6.26
+      },
+      "f05_0.0_to_0.5": {
+        "count": 19692,
+        "percentage": 0.89
+      },
+      "f05_exact_0.0": {
+        "count": 1915377,
+        "percentage": 86.79
+      }
+    }
+  },
+  {
+    "mode": "exact_clean_address",
+    "elapsed_seconds": 147.87,
+    "total_s1_evaluated": 2206821,
+    "macro_f05": 0.203793,
+    "pooled_f05": 0.294547,
+    "pooled_precision": 0.820158,
+    "pooled_recall": 0.082658,
+    "macro_precision_on_predicted": 0.89805,
+    "macro_recall_on_true_matches": 0.081279,
+    "total_true_links": 7638365,
+    "total_pred_links": 769814,
+    "total_recovered_links": 631369,
+    "total_false_positives": 138445,
+    "total_false_negatives": 7006996,
+    "s1_with_predictions": 533024,
+    "s1_with_predictions_pct": 24.15,
+    "avg_pred_links_per_s1": 0.3488,
+    "max_pred_links_single_s1": 20,
+    "true_singletons": 123247,
+    "predicted_singletons": 1673797,
+    "correct_singletons": 119501,
+    "false_merge_singletons": 3746,
+    "singleton_accuracy": 0.969606,
+    "f05_distribution": {
+      "f05_exact_1.0": {
+        "count": 131541,
+        "percentage": 5.96
+      },
+      "f05_0.8_to_1.0": {
+        "count": 104347,
+        "percentage": 4.73
+      },
+      "f05_0.5_to_0.8": {
+        "count": 336570,
+        "percentage": 15.25
+      },
+      "f05_0.0_to_0.5": {
+        "count": 40117,
+        "percentage": 1.82
+      },
+      "f05_exact_0.0": {
+        "count": 1594246,
+        "percentage": 72.24
+      }
+    }
+  },
+  {
+    "mode": "exact_clean_pair",
+    "elapsed_seconds": 147.87,
+    "total_s1_evaluated": 2206821,
+    "macro_f05": 0.082819,
+    "pooled_f05": 0.061778,
+    "pooled_precision": 1.0,
+    "pooled_recall": 0.012998,
+    "macro_precision_on_predicted": 1.0,
+    "macro_recall_on_true_matches": 0.012986,
+    "total_true_links": 7638365,
+    "total_pred_links": 99283,
+    "total_recovered_links": 99283,
+    "total_false_positives": 0,
+    "total_false_negatives": 7539082,
+    "s1_with_predictions": 92706,
+    "s1_with_predictions_pct": 4.2,
+    "avg_pred_links_per_s1": 0.045,
+    "max_pred_links_single_s1": 4,
+    "true_singletons": 123247,
+    "predicted_singletons": 2114115,
+    "correct_singletons": 123247,
+    "false_merge_singletons": 0,
+    "singleton_accuracy": 1.0,
+    "f05_distribution": {
+      "f05_exact_1.0": {
+        "count": 124919,
+        "percentage": 5.66
+      },
+      "f05_0.8_to_1.0": {
+        "count": 11878,
+        "percentage": 0.54
+      },
+      "f05_0.5_to_0.8": {
+        "count": 72818,
+        "percentage": 3.3
+      },
+      "f05_0.0_to_0.5": {
+        "count": 6338,
+        "percentage": 0.29
+      },
+      "f05_exact_0.0": {
+        "count": 1990868,
+        "percentage": 90.21
+      }
+    }
+  },
+  {
+    "mode": "exact_legal_pair",
+    "elapsed_seconds": 147.87,
+    "total_s1_evaluated": 2206821,
+    "macro_f05": 0.100552,
+    "pooled_f05": 0.101378,
+    "pooled_precision": 1.0,
+    "pooled_recall": 0.022065,
+    "macro_precision_on_predicted": 1.0,
+    "macro_recall_on_true_matches": 0.022051,
+    "total_true_links": 7638365,
+    "total_pred_links": 168541,
+    "total_recovered_links": 168541,
+    "total_false_positives": 0,
+    "total_false_negatives": 7469824,
+    "s1_with_predictions": 150955,
+    "s1_with_predictions_pct": 6.84,
+    "avg_pred_links_per_s1": 0.0764,
+    "max_pred_links_single_s1": 5,
+    "true_singletons": 123247,
+    "predicted_singletons": 2055866,
+    "correct_singletons": 123247,
+    "false_merge_singletons": 0,
+    "singleton_accuracy": 1.0,
+    "f05_distribution": {
+      "f05_exact_1.0": {
+        "count": 126245,
+        "percentage": 5.72
+      },
+      "f05_0.8_to_1.0": {
+        "count": 22565,
+        "percentage": 1.02
+      },
+      "f05_0.5_to_0.8": {
+        "count": 116287,
+        "percentage": 5.27
+      },
+      "f05_0.0_to_0.5": {
+        "count": 9105,
+        "percentage": 0.41
+      },
+      "f05_exact_0.0": {
+        "count": 1932619,
+        "percentage": 87.57
+      }
+    }
+  },
+  {
+    "mode": "exact_clean_name_or_address",
+    "elapsed_seconds": 147.87,
+    "total_s1_evaluated": 2206821,
+    "macro_f05": 0.378063,
+    "pooled_f05": 0.165394,
+    "pooled_precision": 0.150166,
+    "pooled_recall": 0.278265,
+    "macro_precision_on_predicted": 0.567905,
+    "macro_recall_on_true_matches": 0.277071,
+    "total_true_links": 7638365,
+    "total_pred_links": 14154229,
+    "total_recovered_links": 2125486,
+    "total_false_positives": 12028743,
+    "total_false_negatives": 5512879,
+    "s1_with_predictions": 1697778,
+    "s1_with_predictions_pct": 76.93,
+    "avg_pred_links_per_s1": 6.4139,
+    "max_pred_links_single_s1": 70,
+    "true_singletons": 123247,
+    "predicted_singletons": 509043,
+    "correct_singletons": 74447,
+    "false_merge_singletons": 48800,
+    "singleton_accuracy": 0.604047,
+    "f05_distribution": {
+      "f05_exact_1.0": {
+        "count": 128586,
+        "percentage": 5.83
+      },
+      "f05_0.8_to_1.0": {
+        "count": 309233,
+        "percentage": 14.01
+      },
+      "f05_0.5_to_0.8": {
+        "count": 539663,
+        "percentage": 24.45
+      },
+      "f05_0.0_to_0.5": {
+        "count": 420159,
+        "percentage": 19.04
+      },
+      "f05_exact_0.0": {
+        "count": 809180,
+        "percentage": 36.67
+      }
+    }
+  }
+]
