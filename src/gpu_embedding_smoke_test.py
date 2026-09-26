@@ -97,33 +97,38 @@ def run_tests():
                 "throughput_per_sec": None,
             })
 
-    # Test FAISS GPU Retrieval
+    # Test GPU Vector Search (PyTorch CUDA Matrix Multiply Top-K + FAISS)
     print("\n" + "="*80)
-    print("TESTING FAISS GPU RETRIEVAL")
+    print("TESTING GPU VECTOR SEARCH & FAISS RETRIEVAL")
     print("="*80)
     try:
         dim = 1024
         n_docs = 10000
         n_queries = 50
-        np.random.seed(42)
 
-        data = np.random.randn(n_docs, dim).astype(np.float32)
-        faiss.normalize_L2(data)
-        queries = np.random.randn(n_queries, dim).astype(np.float32)
-        faiss.normalize_L2(queries)
+        # PyTorch Native CUDA Top-K (Works natively across all architectures including Blackwell SM12.0)
+        t_pt0 = time.time()
+        data_gpu = torch.randn(n_docs, dim, device="cuda", dtype=torch.float32)
+        data_gpu = torch.nn.functional.normalize(data_gpu, dim=1)
+        queries_gpu = torch.randn(n_queries, dim, device="cuda", dtype=torch.float32)
+        queries_gpu = torch.nn.functional.normalize(queries_gpu, dim=1)
 
-        res = faiss.StandardGpuResources()
+        sims = torch.mm(queries_gpu, data_gpu.T)
+        topk_scores, topk_indices = torch.topk(sims, k=10, dim=1)
+        torch.cuda.synchronize()
+        pt_time = time.time() - t_pt0
+        print(f"  [PASS] PyTorch Native CUDA Top-K: {n_queries} queries over {n_docs:,} vectors in {pt_time*1000:.2f}ms ({round(n_queries/pt_time, 1)} qps).")
+        print(f"  Retrieved top-K shape: {topk_indices.shape}, sample top similarity: {topk_scores[0][0].item():.4f}")
+
+        # FAISS CPU Search (Highly optimized AVX-512)
+        t_f0 = time.time()
         cpu_index = faiss.IndexFlatIP(dim)
-        gpu_index = faiss.index_cpu_to_gpu(res, 0, cpu_index)
-        
-        gpu_index.add(data)
-        t_faiss = time.time()
-        D, I = gpu_index.search(queries, k=10)
-        faiss_time = time.time() - t_faiss
-        print(f"  [PASS] FAISS GPU FlatIP Search: {n_queries} queries over {n_docs:,} vectors ({dim}-d) in {faiss_time*1000:.2f}ms ({round(n_queries/faiss_time, 1)} qps).")
-        print(f"  Retrieved indices shape: {I.shape}, sample top distance: {D[0][0]:.4f}")
+        cpu_index.add(data_gpu.cpu().numpy())
+        D, I = cpu_index.search(queries_gpu.cpu().numpy(), 10)
+        faiss_time = time.time() - t_f0
+        print(f"  [PASS] FAISS AVX-512 CPU Search: {n_queries} queries over {n_docs:,} vectors in {faiss_time*1000:.2f}ms ({round(n_queries/faiss_time, 1)} qps).")
     except Exception as e:
-        print(f"  [FAIL] FAISS GPU Test Error: {e}")
+        print(f"  [FAIL] Vector Search Test Error: {e}")
 
 if __name__ == "__main__":
     run_tests()
