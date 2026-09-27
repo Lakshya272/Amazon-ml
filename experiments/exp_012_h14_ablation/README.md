@@ -29,4 +29,4 @@ PYTHONUNBUFFERED=1 /usr/bin/time -v python3 code/business_entity_resolution/src/
   --max-composite-bucket-size 300
 ```
 
-The run log, generated report, JSON metrics, runtime, and peak memory will be recorded under `results_2026-09-27/` after the EC2 run completes.
+The run completed successfully on 2026-09-27. Its exact report, JSON metrics, run metadata, and `/usr/bin/time -v` log are preserved under [`results_2026-09-27/`](results_2026-09-27/). The measured tradeoffs are in [`results_2026-09-27/RESULTS.md`](results_2026-09-27/RESULTS.md).

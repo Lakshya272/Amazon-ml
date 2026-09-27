@@ -212,3 +212,13 @@
 - **Artifacts:** Exact report, JSON, metadata, and full timed log are preserved in [`experiments/exp_011_h_composite_blocking/results_2026-09-27/`](experiments/exp_011_h_composite_blocking/results_2026-09-27/).
 - **Next:** Measure H1+H4 together at caps 150/300, then add H2 or H3 separately. This tests marginal recovery before accepting the high H1-H4 candidate volume. Do not compare this sample directly with older validation reports that used a different sample or code version.
 
+## EXP-012: H1/H4 Composite Ablation
+- **Date / commit:** 2026-09-27 / `059dcb6`
+- **Validation:** Same fixed 50,000-S1 validation sample as EXP-011 (seed 42, 173,509 links), full training S2/S3 candidate pool. Test data was not used.
+- **Method:** Evaluated `A-L+H1+H4`, then added H2 or H3 separately, at posting caps 150 and 300. The full H1-H4 union is the reference.
+- **Cap-150 results:** H1+H4 reached 91.82% link recall / 0.9671 oracle macro F0.5 with 7,599,716 candidates (151.99/S1). Adding H2 reached 92.33% / 0.9696 with 8,384,290 candidates; adding H3 reached 92.14% / 0.9686 with 8,083,093. Full H1-H4 reached 92.61% / 0.9709 with 8,865,398.
+- **Cap-300 results:** H1+H4 reached 92.20% / 0.9692 with 10,058,957 candidates. Adding H2 reached 92.67% / 0.9716 with 11,369,231; adding H3 reached 92.58% / 0.9711 with 11,153,998. Full H1-H4 reached 93.02% / 0.9732 with 12,459,148.
+- **Decision:** All H1-H4 remains the recall/oracle leader; H1+H4 is the lower-volume ablation. The extra recall from H2/H3 requires large candidate-volume increases, so the matcher must be measured before choosing an operating point.
+- **Resources:** EC2 `m6a.2xlarge`; runtime 39m 32.55s; maximum RSS 27,228,352 KiB (~26.0 GiB); no swap; exit status 0.
+- **Artifacts:** Exact report, JSON, metadata, and timed log are in [`experiments/exp_012_h14_ablation/results_2026-09-27/`](experiments/exp_012_h14_ablation/results_2026-09-27/).
+- **Next:** Analyze residual misses using this current blocker on the same validation IDs. The historical `find_true_misses.py` is stale (first-10k sample and different blocking implementation); do not treat its taxonomy as current evidence.
