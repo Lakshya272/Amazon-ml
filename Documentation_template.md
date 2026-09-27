@@ -30,7 +30,7 @@ The 32 pair features cover exact and fuzzy normalized names, token Jaccard/Dice/
 
 ## 5. Results and Error Analysis
 
-The prior A–L matcher run scored **0.8234 macro F0.5**, **0.9101 pooled precision**, **0.7239 pooled recall**, and **0.7416 singleton accuracy** on its 10,000-entity validation sample, with `tau=0.70`, `tau_null=0.85`, and `delta_multi=0.10`. A final wider calibration run is pending; replace these values with the selected saved model's report before packaging if it improves validation. The A–L blocker misses links when all indexed variants fail to retrieve a true pair. The matcher can also reject true candidates or merge lookalike businesses, especially where names are generic or address components are missing. The empty prediction gate limits false merges for entities without matches.
+The first-pass submission matcher scored **0.8255 macro F0.5**, **0.9040 pooled precision**, **0.7332 pooled recall**, and **0.7505 singleton accuracy** on 10,000 fixed validation entities, with `tau=0.70`, `tau_null=0.85`, and `delta_multi=0.10`. An expanded threshold calibration and a same-split Granite candidate-union matcher comparison are running; update this paragraph from the selected validation report before final packaging if either produces a higher measured macro F0.5. Granite top-20 alone recovered 91.97% of links on 50,000 validation entities with a 0.9666 oracle macro F0.5; this is a candidate ceiling, not a measured matcher score. The A–L blocker misses links when all indexed variants fail to retrieve a true pair. The matcher can also reject true candidates or merge lookalike businesses, especially where names are generic or address components are missing. The empty prediction gate limits false merges for entities without matches.
 
 ## 6. Reproducibility and Conclusion
 
@@ -46,4 +46,4 @@ The prior A–L matcher run scored **0.8234 macro F0.5**, **0.9101 pooled precis
 
 ## Appendix B. Additional observations
 
-A separate expanded H1–H4 blocker reached a 0.9732 candidate oracle ceiling on the labeled benchmark. It is not the final submitted blocker and does not imply a 0.9732 matcher score. A Granite embedding retrieval experiment is separate from this A–L pipeline and is excluded unless same-split matcher F0.5 improvement is demonstrated and full outputs can be regenerated and validated.
+A separate expanded H1–H4 blocker reached a 0.9732 candidate oracle ceiling on the labeled benchmark. It is not the final submitted blocker and does not imply a 0.9732 matcher score. Granite embedding candidates are excluded unless the same-split matcher F0.5 comparison demonstrates an improvement and full outputs can be regenerated and validated.
