@@ -1,0 +1,45 @@
+# EXP-009: Pairwise LightGBM Matcher over A...L Candidates with Entity Null Margin Calibration
+
+- Date: 2026-09-26 20:10:45
+- Train Entities: 40,000 | Validation Entities: 10,000
+- Optimal tau: 0.70
+- Optimal tau_null: 0.85
+- Optimal delta_multi: 0.10
+- Validation Macro F0.5: **0.8234**
+- Validation Precision: **0.9101**
+- Validation Recall: **0.7239**
+- Singleton Accuracy: **0.7416**
+
+## Feature Importances (Gain)
+- `name_c3_x_addr_c3`: 1,910,982.0
+- `addr_c3_jaccard`: 765,199.7
+- `addr_token_sort_ratio`: 280,830.7
+- `digits_overlap_ratio`: 201,937.8
+- `addr_len_diff_ratio`: 136,003.9
+- `name_translit_c3`: 115,762.8
+- `name_token_sort_ratio`: 89,612.2
+- `name_x_addr_jaccard`: 64,083.7
+- `name_prefix_ratio`: 42,730.6
+- `name_fuzz_ratio`: 36,046.8
+- `name_len_diff_ratio`: 35,028.0
+- `channel_hits`: 34,627.7
+- `addr_fuzz_ratio`: 20,502.7
+- `name_token_jaccard`: 14,736.9
+- `name_c3_jaccard`: 11,849.5
+- `addr_token_overlap`: 11,265.8
+- `name_acronym_match`: 10,951.1
+- `name_token_overlap`: 8,814.3
+- `addr_token_jaccard`: 7,808.4
+- `name_c4_jaccard`: 7,602.7
+- `name_token_dice`: 6,978.4
+- `name_legal_exact`: 5,463.1
+- `postal_prefix3_match`: 4,624.4
+- `name_squeezed_c3`: 4,622.3
+- `addr_token_dice`: 1,594.7
+- `name_translit_exact`: 1,409.9
+- `postal_exact_match`: 656.0
+- `landmark_match`: 246.4
+- `addr_clean_exact`: 137.3
+- `numeric_post_match`: 122.1
+- `name_clean_exact`: 26.5
+- `cand_is_s2`: 0.0

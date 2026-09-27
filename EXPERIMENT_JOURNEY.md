@@ -181,6 +181,24 @@
   - **Channel L (Acronyms & Short Initialisms)** achieved an extraordinary **15.20% standalone link recall** with an ultra-compact candidate volume of **6.38 candidates per S1**! It recovered 26.11% of S2 links and 21.62% of US links.
   - The combined candidate blocker $A\dots G + H + I + J + K + L$ reached **81.62% link recall**, an **Oracle Macro $F_{0.5}$ of 0.9175**, **61.09% full entity coverage**, and dropped zero-coverage entities down to **3.59%**, all while keeping candidate volume disciplined at **92.63 cands/S1**.
 
+---
 
+## EXP-009: Pairwise LightGBM Matcher and Entity-Level Calibration
+- **Date:** 2026-09-26
+- **Validation:** 40,000 train S1 / 10,000 validation S1; 928,110 validation candidates
+- **Best calibration:** `tau=0.70`, `tau_null=0.85`, `delta_multi=0.10`
+- **Results:** Macro F0.5 **0.8234**, precision **0.9101**, recall **0.7239**, singleton accuracy **0.7416**
+- **Runtime:** 2,025 seconds (~33.8 minutes); peak memory was not recorded.
+- **Report:** `outputs/exp009_matcher/EXP009_MATCHER_CALIBRATION_REPORT.md`
+- **Observation:** The lexical A...L candidate ceiling remains 81.62% link recall. The matcher’s validation F0.5 is lower than its 0.9175 candidate-oracle ceiling, so semantic retrieval is the next useful candidate-generation experiment. Do not tune against the official test set.
+
+## EXP-010: Dense Retrieval Runner Preparation (No Embedding Run Yet)
+- **Date:** 2026-09-27
+- **Frozen blocker:** Keep A...L at 81.62% recall / 0.9175 oracle Macro F0.5 as the comparison baseline; do not spend more time expanding buckets before the embedding comparison.
+- **Runner changes:** `code/business_entity_resolution/src/generate_gpu_dense_candidates.py` now samples only the fixed validation split, supports arbitrary countries, streams candidate embeddings in chunks, performs batched top-K without a full query-by-corpus score matrix, and records standalone recall/oracle F0.5, candidate volume/purity, and reduction ratio.
+- **Correctness checks:** Python compilation succeeded locally and on EC2. The candidate reduction denominator counts the same-country query-candidate Cartesian space.
+- **CPU smoke:** Installed CPU-only PyTorch and SentenceTransformers in an isolated venv outside the repo. IBM Granite encoded 256 real training records (128 with non-ASCII text) at 47.95 records/sec after a 5.2-second model load; 768-dimensional vectors; 5.34 seconds for the measured batch.
+- **Compute status:** EC2 `m6a.2xlarge` has no GPU. At the measured rate, one pass over ~6.2M S2/S3 records alone projects to roughly 36 hours, before query scoring, so no full CPU retrieval was started. RunPod remains stopped. Dense candidate recall/oracle metrics have not yet been produced.
+- **Model:** Default is `ibm-granite/granite-embedding-278m-multilingual` (278M parameters, Apache-2.0). Compare against `BAAI/bge-m3` only on the same validation IDs and under the same candidate budget. The runner output is standalone; fuse with A...L only after measuring incremental recall and candidate volume on identical S1 IDs.
 
 
