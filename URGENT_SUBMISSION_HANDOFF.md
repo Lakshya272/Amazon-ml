@@ -10,6 +10,14 @@ The official validator parses all candidate lists into Python sets. At ~160M exp
 
 The fallback streaming checker is now at `code/business_entity_resolution/src/validate_streaming_submission.py` locally **and on EC2**. Run on EC2 with `python3 code/business_entity_resolution/src/validate_streaming_submission.py --source1 student_resource/dataset/test/test_source1.tsv --candidate output/candidate_pairs.tsv --matching output/matching_results.tsv`. It checks all 1,732,544 rows in lockstep with constant memory, duplicates, prefixes, and match subset. It does not independently load all S2/S3 IDs; the inference script's index supplies those IDs.
 
+## 15:47 IST live status
+
+- EC2 training finished successfully (34:18 wall time, 28,203,480 KiB peak RSS, no swap). Validation: macro F0.5 **0.825524**, pooled precision **0.903986**, pooled recall **0.733192**, singleton accuracy **0.750476**, `tau=0.70`, `tau_null=0.85`, `delta_multi=0.10`. Artifacts are in `/home/ec2-user/amazon-ml-challenge/outputs/submission_model/` and copies are locally under `outputs/submission_model/`.
+- Full EC2 test inference started with PID `72784` (wrapper PID `72783`), log `/home/ec2-user/amazon-ml-challenge/logs/submission_inference/run_20260927.log`. At 15:47 IST it had scanned 9,969,589 candidate records and was building the A–L test index. Disk free was 38 GiB; RAM was 25 GiB available.
+- Granite EXP-014 finished on RunPod. Top-20 retrieval over 50,000 validation S1 entities recovered 159,582 / 173,509 links (candidate recall **0.919733**), 1,000,000 candidates, and oracle macro F0.5 **0.966615**. This remains a blocking oracle only.
+- RunPod EXP-015 expanded calibration still runs as PID `5584` in `/workspace/experiments/exp015_expanded_calibration/run.log`.
+- Same-split model scoring of A–L vs. A–L plus Granite was started as PID `12314` on RunPod. Script: `code/business_entity_resolution/src/eval_granite_union.py` (copied to the RunPod repo); log `/workspace/experiments/exp016_granite_union/run.log`. It applies the frozen EC2 model/config to the 50k Granite validation IDs and compares actual matcher F0.5. It should finish in ~30–45 minutes after indexing. No test inference change is warranted until this metric is available.
+
 Deadline: **today 23:59 IST**. Prioritize a validated, complete submission. Use only supplied challenge data. Do not tune on test or use external business lookup. The current 0.9732 result is a *candidate oracle*; the measured A–L LightGBM matcher scored 0.8234 macro F0.5 on validation. A 0.9999 score is not supported by current evidence.
 
 ## Jobs already running — do not duplicate
