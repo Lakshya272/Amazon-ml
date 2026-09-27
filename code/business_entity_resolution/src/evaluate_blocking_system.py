@@ -24,6 +24,7 @@ Fulfills:
    - E: Drop-one-token / corrupted-key retrieval (for names >= 3 tokens, index prefixes and skip-grams)
    - F: Address component-drop retrieval (number-only, postal-only, street-word only)
    - G: Sorted-neighborhood / prefix key retrieval (blocking keys on first 8 chars of normalized name)
+   - H1-H4: Frequency-bounded house-number/name/locality composite retrieval
 4. Nested Union Benchmark:
    - A
    - A+B
@@ -42,6 +43,7 @@ import gc
 import json
 import math
 import os
+import random
 import re
 import sys
 import time
@@ -71,6 +73,19 @@ _STOP_WORDS = {
     'and', 'the', 'of', 'in', 'at', 'on', 'for', 'with', 'to', 'a', 'an',
     'private', 'limited', 'corporation', 'incorporated', 'company', 'llc', 'sarl', 'sas', 'gmbh',
     'pvt', 'ltd', 'corp', 'inc', 'co', 'services', 'enterprises', 'trading', 'solutions', 'associates'
+}
+_ADDRESS_STOP_WORDS = _STOP_WORDS | {
+    'street', 'road', 'avenue', 'boulevard', 'drive', 'court', 'lane', 'place',
+    'circle', 'way', 'trail', 'parkway', 'highway', 'suite', 'floor', 'apartment',
+    'building', 'room', 'number', 'near', 'opposite', 'behind', 'beside', 'block',
+    'sector', 'phase', 'plot', 'flat', 'door', 'unit', 'north', 'south', 'east',
+    'west', 'state', 'district', 'city', 'country', 'india', 'usa', 'us', 'null',
+    'rd', 'st', 'ave', 'blvd', 'dr', 'ct', 'ln', 'hwy', 'apt', 'ste', 'fl',
+    'nagar', 'colony', 'bazaar', 'market', 'marg', 'gali', 'ward', 'village',
+    'gram', 'tehsil', 'taluk', 'rue', 'route', 'chemin', 'impasse', 'allee',
+    'place', 'square', 'voie', 'passage', 'cours', 'quai', 'cedex', 'france',
+    'batiment', 'residence', 'industrielle', 'saint', 'sainte',
+    'de', 'des', 'du', 'la', 'le', 'les', 'l', 'd', 'au', 'aux', 'en', 'sur', 'sous',
 }
 
 
@@ -162,6 +177,42 @@ def extract_numeric_address_keys(country: str, addr: str) -> List[Tuple[str, str
         # Pair first two numbers (e.g. plot/door number + sector/street number)
         keys.append((f"{country}_num_pair", f"{digits[0]}_{digits[1]}"))
     return keys
+
+
+def extract_cross_field_address_name_keys(name: str, addr: str) -> Dict[str, List[str]]:
+    """Composite keys combining house number, name tokens, and address locality.
+
+    This keeps the original Unicode-normalized fields intact. Address posting
+    lists are frequency-capped during index construction, so query retrieval
+    does not need an arbitrary per-S1 top-K cutoff.
+    """
+    clean_name = normalize_legal_name(name)
+    name_tokens = get_name_tokens(clean_name)
+    clean_addr = normalize_clean(addr)
+    addr_tokens = [
+        token for token in clean_addr.split()
+        if token not in _ADDRESS_STOP_WORDS and not token.isdigit() and len(token) >= 3
+    ]
+    # De-duplicate while preserving address order, which is useful for terminal
+    # locality tokens and avoids indexing the same key repeatedly per record.
+    addr_tokens = list(dict.fromkeys(addr_tokens))
+    numbers = [n for n in _DIGIT_SEQ_RE.findall(clean_addr) if n != '0']
+    primary_number = numbers[0] if numbers else None
+
+    keys: Dict[str, Set[str]] = {"H1": set(), "H2": set(), "H3": set(), "H4": set()}
+    if primary_number:
+        for token in addr_tokens[:3]:
+            keys["H1"].add(f"{primary_number}_{token}")
+        for token in name_tokens[:2]:
+            keys["H2"].add(f"{token}_{primary_number}")
+        for token in addr_tokens[-2:]:
+            keys["H3"].add(f"{primary_number}_{token}")
+    if name_tokens:
+        for name_token in name_tokens[:2]:
+            for locality_token in addr_tokens[-2:]:
+                keys["H4"].add(f"{name_token}_{locality_token}")
+
+    return {family: sorted(values) for family, values in keys.items()}
 
 
 def extract_landmark_address_keys(country: str, addr: str) -> List[Tuple[str, str]]:
@@ -301,8 +352,16 @@ def run_benchmark(
     max_candidates: Optional[int] = None,
     max_bucket_size: int = 100,
     cap_per_channel: int = 30,
+    validation_split_path: Optional[str] = None,
+    validation_sample_s1: int = 0,
+    seed: int = 42,
+    max_composite_bucket_size: int = 300,
 ):
+    if max_composite_bucket_size < 1:
+        raise ValueError("max_composite_bucket_size must be positive")
     overall_start = time.time()
+    composite_caps = sorted(set([min(150, max_composite_bucket_size), max_composite_bucket_size]))
+    standalone_composite_cap = min(150, max_composite_bucket_size)
     os.makedirs(output_dir, exist_ok=True)
 
     gt_path = os.path.join(data_dir, "train", "train_ground_truth.tsv")
@@ -310,7 +369,18 @@ def run_benchmark(
     s2_path = os.path.join(data_dir, "train", "train_source2.tsv")
     s3_path = os.path.join(data_dir, "train", "train_source3.tsv")
 
-    print(f"[{time.strftime('%H:%M:%S')}] Step 1: Loading full ground truth from {gt_path}...")
+    selected_validation_ids = None
+    if validation_split_path:
+        with open(validation_split_path, 'r', encoding='utf-8') as f:
+            validation_ids = json.load(f)
+        if validation_sample_s1 > 0:
+            sample_size = min(validation_sample_s1, len(validation_ids))
+            selected_validation_ids = set(random.Random(seed).sample(validation_ids, sample_size))
+        else:
+            selected_validation_ids = set(validation_ids)
+        print(f"Using {len(selected_validation_ids):,} IDs from fixed validation split (seed={seed}).")
+
+    print(f"[{time.strftime('%H:%M:%S')}] Step 1: Loading ground truth from {gt_path}...")
     truth: Dict[str, Set[str]] = {}
     total_true_links = 0
     with open(gt_path, 'r', encoding='utf-8', errors='replace') as f:
@@ -320,6 +390,8 @@ def run_benchmark(
         for row in reader:
             if not row: continue
             s1_id = row[0].strip()
+            if selected_validation_ids is not None and s1_id not in selected_validation_ids:
+                continue
             matched = row[1].strip() if len(row) > 1 else ""
             if matched:
                 matches = {x.strip() for x in matched.split(',') if x.strip()}
@@ -328,8 +400,13 @@ def run_benchmark(
             else:
                 truth[s1_id] = set()
             count += 1
-            if max_s1 and count >= max_s1:
+            if selected_validation_ids is None and max_s1 and count >= max_s1:
                 break
+
+    if selected_validation_ids is not None and len(truth) != len(selected_validation_ids):
+        raise ValueError(
+            f"Fixed validation IDs missing from ground truth: {len(selected_validation_ids.difference(truth)):,}"
+        )
 
     target_s1_ids = set(truth.keys())
     print(f"[{time.strftime('%H:%M:%S')}] Loaded {len(truth):,} S1 ground-truth entries with {total_true_links:,} links.")
@@ -385,9 +462,13 @@ def run_benchmark(
     idx_j = defaultdict(list)  # Channel J: (country_rom_key, val)
     idx_k = defaultdict(list)  # Channel K: (country_typo_key, val)
     idx_l = defaultdict(list)  # Channel L: (country_acr_key, val)
+    idx_h_variants = defaultdict(list)  # H1-H4: country-scoped cross-field composites
+    h_overflow_keys: Set[Tuple[str, str, str]] = set()
+    h_overflow_by_family = Counter()
 
     total_indexed = 0
     candidate_source_map = {}  # EID -> 'S2' or 'S3'
+    candidate_country_counts = Counter()
 
     for path in [s2_path, s3_path]:
         s_tag = "S2" if "source2" in path else "S3"
@@ -399,6 +480,7 @@ def run_benchmark(
                 eid, b_name, b_addr, country = row[0].strip(), row[1].strip(), row[2].strip(), row[3].strip()
                 total_indexed += 1
                 candidate_source_map[eid] = s_tag
+                candidate_country_counts[country] += 1
 
                 legal_n = normalize_legal_name(b_name)
 
@@ -463,12 +545,44 @@ def run_benchmark(
                 for k_type, k_val in l_keys:
                     idx_l[(k_type, k_val)].append(eid)
 
+                # Channels H1-H4: cross-field composite keys. Keep only
+                # postings up to the configured frequency cap; overfull keys
+                # are dropped entirely and cannot be recreated later.
+                for family, values in extract_cross_field_address_name_keys(b_name, b_addr).items():
+                    for value in values:
+                        m_key = (country, family, value)
+                        if m_key in h_overflow_keys:
+                            continue
+                        posting = idx_h_variants.get(m_key)
+                        if posting is None:
+                            idx_h_variants[m_key] = [eid]
+                        else:
+                            posting.append(eid)
+                            if len(posting) > max_composite_bucket_size:
+                                del idx_h_variants[m_key]
+                                h_overflow_keys.add(m_key)
+                                h_overflow_by_family[family] += 1
+
                 if max_candidates and total_indexed >= max_candidates:
                     break
         print(f"  Indexed {s_tag} (total candidate records: {total_indexed:,})...")
         if max_candidates and total_indexed >= max_candidates:
             break
 
+    h_index_stats: Dict[str, Dict[str, Dict[str, int]]] = {}
+    for posting_cap in composite_caps:
+        retained = Counter()
+        pruned = Counter(h_overflow_by_family)
+        for (_, family, _), posting in idx_h_variants.items():
+            if len(posting) <= posting_cap:
+                retained[family] += 1
+            else:
+                pruned[family] += 1
+        h_index_stats[str(posting_cap)] = {
+            family: {"retained_keys": int(retained[family]), "pruned_keys": int(pruned[family])}
+            for family in ("H1", "H2", "H3", "H4")
+        }
+    print(f"  H1-H4 retained keys: {len(idx_h_variants):,}; index stats by cap: {h_index_stats}")
     print(f"[{time.strftime('%H:%M:%S')}] Finished building indices in {round(time.time() - t_idx_start, 2)}s.")
 
     # -----------------------------------------------------------------
@@ -495,6 +609,9 @@ def run_benchmark(
         "Channel_L_Standalone",
         "A-G+H+I+J+K+L",
     ]
+    union_names.extend([f"H{n}_Standalone@{standalone_composite_cap}" for n in range(1, 5)])
+    union_names.extend([f"A-L+H{n}@{standalone_composite_cap}" for n in range(1, 5)])
+    union_names.extend(f"A-L+H1-4@{cap}" for cap in composite_caps)
 
     # Metrics container per union
     metrics = {
@@ -502,6 +619,7 @@ def run_benchmark(
             "recovered_links": 0,
             "total_candidate_pairs": 0,
             "candidate_counts": [],  # for quantiles
+            "singleton_candidate_pairs": 0,
             # Entity-level coverage buckets
             "cov_0": 0,
             "cov_1_49": 0,
@@ -533,6 +651,7 @@ def run_benchmark(
     }
 
     s1_count = 0
+    s1_country_counts = Counter()
     t_stream_start = time.time()
 
     with open(s1_path, 'r', encoding='utf-8', errors='replace') as f:
@@ -546,6 +665,7 @@ def run_benchmark(
 
             s1_count += 1
             country = row[3].strip()
+            s1_country_counts[country] += 1
             legal_n = normalize_legal_name(row[1].strip())
             b_addr = row[2].strip()
 
@@ -654,6 +774,20 @@ def run_benchmark(
                 m_l = idx_l.get((k_type, k_val))
                 if m_l: cand_l.update(m_l[:cap_per_channel // 2])
 
+            # H1-H4 use cross-field composite keys with bounded posting lists.
+            h_keys_by_family = extract_cross_field_address_name_keys(row[1].strip(), b_addr)
+            composite_candidates: Dict[int, Dict[str, Set[str]]] = {}
+            for posting_cap in composite_caps:
+                by_family: Dict[str, Set[str]] = {}
+                for family, values in h_keys_by_family.items():
+                    family_candidates: Set[str] = set()
+                    for value in values:
+                        posting = idx_h_variants.get((country, family, value))
+                        if posting is not None and len(posting) <= posting_cap:
+                            family_candidates.update(posting)
+                    by_family[family] = family_candidates
+                composite_candidates[posting_cap] = by_family
+
             # Form Nested Unions
             u_a = cand_a
             u_ab = u_a | cand_b
@@ -687,12 +821,25 @@ def run_benchmark(
                 "Channel_L_Standalone": cand_l,
                 "A-G+H+I+J+K+L": u_ag_h_i_j_k_l,
             }
+            for family in ("H1", "H2", "H3", "H4"):
+                standalone_name = f"{family}_Standalone@{standalone_composite_cap}"
+                family_union_name = f"A-L+{family}@{standalone_composite_cap}"
+                family_cands = composite_candidates[standalone_composite_cap][family]
+                unions_dict[standalone_name] = family_cands
+                unions_dict[family_union_name] = u_ag_h_i_j_k_l | family_cands
+            for posting_cap in composite_caps:
+                all_composite_candidates = set().union(
+                    *composite_candidates[posting_cap].values()
+                )
+                unions_dict[f"A-L+H1-4@{posting_cap}"] = u_ag_h_i_j_k_l | all_composite_candidates
 
             # Evaluate each nested union
             for u_name, cand_set in unions_dict.items():
                 m_dict = metrics[u_name]
                 n_cands = len(cand_set)
                 m_dict["total_candidate_pairs"] += n_cands
+                if card_bucket == "singleton":
+                    m_dict["singleton_candidate_pairs"] += n_cands
                 if len(m_dict["candidate_counts"]) < 100000:
                     m_dict["candidate_counts"].append(n_cands)
 
@@ -758,6 +905,13 @@ def run_benchmark(
     print("\n" + "="*110)
     print("NESTED CANDIDATE UNION BENCHMARK REPORT WITH ENTITY COVERAGE")
     print("="*110)
+    same_country_pair_space = sum(
+        n_s1 * candidate_country_counts[country]
+        for country, n_s1 in s1_country_counts.items()
+    )
+    baseline_union_name = "A-G+H+I+J+K+L"
+    baseline_recovered = metrics[baseline_union_name]["recovered_links"]
+    singleton_entity_count = metrics[baseline_union_name]["card_stats"]["singleton"]["entities"]
 
     for u_name in union_names:
         m = metrics[u_name]
@@ -783,6 +937,15 @@ def run_benchmark(
         max_cands = int(np.max(cands_arr))
 
         oracle_macro_f05 = round(m["sum_oracle_f05"] / s1_count, 4) if s1_count > 0 else 0.0
+        false_candidate_pairs = m["total_candidate_pairs"] - m["recovered_links"]
+        candidate_pair_purity = m["recovered_links"] / max(m["total_candidate_pairs"], 1)
+        candidate_reduction_ratio = 1.0 - (
+            m["total_candidate_pairs"] / max(same_country_pair_space, 1)
+        )
+        marginal_recovered = (
+            m["recovered_links"] - baseline_recovered
+            if u_name.startswith("A-L+H") else 0
+        )
 
         row = {
             "union": u_name,
@@ -800,6 +963,13 @@ def run_benchmark(
             "p95_cands": p95_cands,
             "p99_cands": p99_cands,
             "max_cands": max_cands,
+            "false_candidate_pairs": int(false_candidate_pairs),
+            "candidate_pair_purity": round(candidate_pair_purity, 6),
+            "candidate_reduction_ratio": round(candidate_reduction_ratio, 6),
+            "avg_singleton_candidates": round(
+                m["singleton_candidate_pairs"] / max(singleton_entity_count, 1), 2
+            ),
+            "marginal_recovered_links_over_A_L": int(marginal_recovered),
             "rec_s2": round(rec_s2_pct, 2),
             "rec_s3": round(rec_s3_pct, 2),
             "rec_us": round(rec_us_pct, 2),
@@ -816,6 +986,9 @@ def run_benchmark(
         print(f"  Entity Coverage:    Full Coverage: {row['full_coverage_rate']:.2f}%  |  Zero Coverage: {row['zero_coverage_rate']:.2f}%")
         print(f"  Coverage Bins:      0%: {row['cov_0_pct']}%  |  1-49%: {row['cov_1_49_pct']}%  |  50-99%: {row['cov_50_99_pct']}%  |  100%: {row['cov_100_pct']}%")
         print(f"  Candidate Volume:   Total: {row['total_candidates']:,}  |  Avg/S1: {row['avg_cands_s1']}  |  Med: {row['median_cands']}  |  P95: {row['p95_cands']}  |  P99: {row['p99_cands']}  |  Max: {row['max_cands']}")
+        print(f"  Candidate Integrity: false candidates={row['false_candidate_pairs']:,} | pair purity={row['candidate_pair_purity']:.4%} | reduction={row['candidate_reduction_ratio']:.4%} | avg singleton candidates={row['avg_singleton_candidates']}")
+        if u_name.startswith("A-L+H"):
+            print(f"  Marginal Recall Gain: {row['marginal_recovered_links_over_A_L']:,} additional true links beyond A-L")
         print(f"  Sources & Country:  S2 Rec: {row['rec_s2']}%  |  S3 Rec: {row['rec_s3']}%  |  US Rec: {row['rec_us']}%  |  IN Rec: {row['rec_in']}%")
         print(f"  Cardinality Rec:    1-match: {row['cardinality_recall']['1_match']}%  |  2-matches: {row['cardinality_recall']['2_matches']}%  |  3-4: {row['cardinality_recall']['3_4_matches']}%  |  5+: {row['cardinality_recall']['5_plus_matches']}%")
 
@@ -823,20 +996,44 @@ def run_benchmark(
     with open(out_json, 'w', encoding='utf-8') as f:
         json.dump(benchmark_table, f, indent=2)
 
+    metadata = {
+        "validation_split_path": os.path.abspath(validation_split_path) if validation_split_path else None,
+        "validation_sample_s1": len(target_s1_ids),
+        "validation_seed": seed if validation_split_path else None,
+        "total_true_links": total_true_links,
+        "candidate_records_indexed": total_indexed,
+        "same_country_pair_space": int(same_country_pair_space),
+        "max_name_token_df": max_bucket_size,
+        "baseline_candidates_per_channel_cap": cap_per_channel,
+        "composite_posting_caps": composite_caps,
+        "composite_index_stats": h_index_stats,
+        "runtime_seconds": round(time.time() - overall_start, 2),
+    }
+    metadata_path = os.path.join(output_dir, "blocking_experiment_metadata.json")
+    with open(metadata_path, 'w', encoding='utf-8') as f:
+        json.dump(metadata, f, indent=2)
+
     # Generate Markdown Table Report
+    validation_description = (
+        f"fixed split, seed {seed}"
+        if validation_split_path
+        else (f"first {s1_count:,} training S1 rows" if max_s1 else "all training S1 rows")
+    )
     md_lines = [
         "# Nested Candidate Union Benchmark Report — Entity Coverage & Volume Frontier",
-        f"\n**Evaluated on Full Ground Truth:** {s1_count:,} Source 1 Entities, {total_true_links:,} True Links",
+        f"\n**Evaluated S1 sample:** {s1_count:,} entities from {validation_description}; {total_true_links:,} true links",
+        f"**Candidate universe:** {total_indexed:,} training S2/S3 records | **Base per-channel cap:** {cap_per_channel} | **H1-H4 posting caps:** {composite_caps}",
         f"**Execution Runtime:** {round(time.time() - overall_start, 2)}s (~{round((time.time() - overall_start)/60, 1)} min)\n",
         "## 1. Candidate Union Frontier Table\n",
-        "| Union | Link Recall (%) | Oracle Macro F0.5 | Full Cov (%) | Zero Cov (%) | Cov 0% | 1-49% | 50-99% | 100% | Total Cands | Avg/S1 | Med | P95 | P99 | Max | Rec S2 | Rec S3 | Rec US | Rec IN |",
-        "|---|---|---|---|---|---|---|---|---|---|---|---|---|---|---|---|---|---|---|",
+        "| Union | Link Recall (%) | Oracle Macro F0.5 | Full Cov (%) | Zero Cov (%) | Cov 0% | Cov 1-49% | Cov 50-99% | Cov 100% | Total Cands | Avg/S1 | Med | P95 | P99 | Max | False Cands | Pair Purity | Reduction | Singleton Avg Cands | Marginal Links vs A-L | Rec S2 | Rec S3 | Rec US | Rec IN |",
+        "|---|---|---|---|---|---|---|---|---|---|---|---|---|---|---|---|---|---|---|---|---|---|---|---|",
     ]
     for r in benchmark_table:
         md_lines.append(
             f"| `{r['union']}` | **{r['link_recall']}%** | **{r['oracle_macro_f05']:.4f}** | {r['full_coverage_rate']}% | {r['zero_coverage_rate']}% | "
             f"{r['cov_0_pct']}% | {r['cov_1_49_pct']}% | {r['cov_50_99_pct']}% | {r['cov_100_pct']}% | "
             f"{r['total_candidates']:,} | {r['avg_cands_s1']} | {r['median_cands']} | {r['p95_cands']} | {r['p99_cands']} | {r['max_cands']} | "
+            f"{r['false_candidate_pairs']:,} | {r['candidate_pair_purity']:.4%} | {r['candidate_reduction_ratio']:.4%} | {r['avg_singleton_candidates']} | {r['marginal_recovered_links_over_A_L']:,} | "
             f"{r['rec_s2']}% | {r['rec_s3']}% | {r['rec_us']}% | {r['rec_in']}% |"
         )
 
@@ -863,6 +1060,13 @@ if __name__ == "__main__":
     parser.add_argument("--max-candidates", type=int, default=0)
     parser.add_argument("--max-bucket-size", type=int, default=80)
     parser.add_argument("--cap-per-channel", type=int, default=30)
+    parser.add_argument("--validation-split", type=str, default=None,
+                        help="JSON list of fixed validation S1 IDs")
+    parser.add_argument("--validation-sample-s1", type=int, default=0,
+                        help="Deterministic sample size from --validation-split; 0 uses all IDs")
+    parser.add_argument("--seed", type=int, default=42)
+    parser.add_argument("--max-composite-bucket-size", type=int, default=300,
+                        help="Maximum posting-list size stored for H1-H4 composite keys")
     args = parser.parse_args()
 
     run_benchmark(
@@ -872,4 +1076,8 @@ if __name__ == "__main__":
         max_candidates=args.max_candidates if args.max_candidates > 0 else None,
         max_bucket_size=args.max_bucket_size,
         cap_per_channel=args.cap_per_channel,
+        validation_split_path=args.validation_split,
+        validation_sample_s1=args.validation_sample_s1,
+        seed=args.seed,
+        max_composite_bucket_size=args.max_composite_bucket_size,
     )
