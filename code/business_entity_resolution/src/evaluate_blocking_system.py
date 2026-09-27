@@ -612,6 +612,16 @@ def run_benchmark(
     union_names.extend([f"H{n}_Standalone@{standalone_composite_cap}" for n in range(1, 5)])
     union_names.extend([f"A-L+H{n}@{standalone_composite_cap}" for n in range(1, 5)])
     union_names.extend(f"A-L+H1-4@{cap}" for cap in composite_caps)
+    composite_groups = {
+        "H1+H4": ("H1", "H4"),
+        "H1+H2+H4": ("H1", "H2", "H4"),
+        "H1+H3+H4": ("H1", "H3", "H4"),
+    }
+    union_names.extend(
+        f"A-L+{group_name}@{cap}"
+        for cap in composite_caps
+        for group_name in composite_groups
+    )
 
     # Metrics container per union
     metrics = {
@@ -832,6 +842,13 @@ def run_benchmark(
                     *composite_candidates[posting_cap].values()
                 )
                 unions_dict[f"A-L+H1-4@{posting_cap}"] = u_ag_h_i_j_k_l | all_composite_candidates
+                for group_name, families in composite_groups.items():
+                    group_candidates = set().union(
+                        *(composite_candidates[posting_cap][family] for family in families)
+                    )
+                    unions_dict[f"A-L+{group_name}@{posting_cap}"] = (
+                        u_ag_h_i_j_k_l | group_candidates
+                    )
 
             # Evaluate each nested union
             for u_name, cand_set in unions_dict.items():
