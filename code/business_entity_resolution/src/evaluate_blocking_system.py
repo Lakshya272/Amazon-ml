@@ -47,6 +47,7 @@ import random
 import re
 import sys
 import time
+import unicodedata
 from collections import Counter, defaultdict
 from typing import Dict, List, Set, Tuple, Any, Optional
 
@@ -215,6 +216,130 @@ def extract_cross_field_address_name_keys(name: str, addr: str) -> Dict[str, Lis
     return {family: sorted(values) for family, values in keys.items()}
 
 
+def diagnose_missed_link(s1_name: str, s1_addr: str, target_name: str, target_addr: str) -> Dict[str, Any]:
+    """Summarize lexical evidence for a missed GT pair without external lookup."""
+    s_name_tokens = set(get_name_tokens(normalize_legal_name(s1_name)))
+    t_name_tokens = set(get_name_tokens(normalize_legal_name(target_name)))
+    s_addr_tokens = {
+        t for t in normalize_clean(s1_addr).split()
+        if len(t) >= 3 and not t.isdigit()
+    }
+    t_addr_tokens = {
+        t for t in normalize_clean(target_addr).split()
+        if len(t) >= 3 and not t.isdigit()
+    }
+    s_numbers = set(_DIGIT_SEQ_RE.findall(normalize_clean(s1_addr)))
+    t_numbers = set(_DIGIT_SEQ_RE.findall(normalize_clean(target_addr)))
+    s_name_chars = {c for c in normalize_legal_name(s1_name) if c.isalnum()}
+    t_name_chars = {c for c in normalize_legal_name(target_name) if c.isalnum()}
+
+    def scripts(text: str) -> Set[str]:
+        return {
+            unicodedata.name(c, "UNKNOWN").split()[0]
+            for c in text
+            if c.isalpha()
+        }
+
+    s_scripts = scripts(s1_name)
+    t_scripts = scripts(target_name)
+
+    def jaccard(left: Set[str], right: Set[str]) -> float:
+        return len(left & right) / len(left | right) if left | right else 0.0
+
+    return {
+        "name_token_jaccard": jaccard(s_name_tokens, t_name_tokens),
+        "name_shared_tokens": sorted(s_name_tokens & t_name_tokens),
+        "name_char_jaccard": jaccard(s_name_chars, t_name_chars),
+        "name_scripts_s1": sorted(s_scripts),
+        "name_scripts_target": sorted(t_scripts),
+        "name_scripts_disjoint": bool(s_scripts and t_scripts and not (s_scripts & t_scripts)),
+        "address_token_jaccard": jaccard(s_addr_tokens, t_addr_tokens),
+        "address_shared_tokens": sorted(s_addr_tokens & t_addr_tokens),
+        "numbers_s1": sorted(s_numbers),
+        "numbers_target": sorted(t_numbers),
+        "numbers_shared": sorted(s_numbers & t_numbers),
+        "name_missing_s1": not bool(s1_name.strip()),
+        "name_missing_target": not bool(target_name.strip()),
+        "address_missing_s1": not bool(s1_addr.strip()),
+        "address_missing_target": not bool(target_addr.strip()),
+    }
+
+
+def _new_miss_summary(sample_size: int, seed: int) -> Dict[str, Any]:
+    return {
+        "missed_links": 0,
+        "missed_s1_ids": set(),
+        "missing_target_records": 0,
+        "signal_counts": Counter(),
+        "by_country": Counter(),
+        "by_source": Counter(),
+        "by_cardinality": Counter(),
+        "name_script_pairs": Counter(),
+        "name_token_jaccard_sum": 0.0,
+        "name_char_jaccard_sum": 0.0,
+        "address_token_jaccard_sum": 0.0,
+        "sample_size": sample_size,
+        "sample_seed": seed,
+        "sample_seen": 0,
+        "sample": [],
+        "rng": random.Random(seed),
+    }
+
+
+def _record_missed_link(
+    summary: Dict[str, Any],
+    sample_row: Dict[str, Any],
+    signals: Dict[str, Any],
+    country: str,
+    source: str,
+    cardinality: str,
+) -> None:
+    summary["missed_links"] += 1
+    summary["missed_s1_ids"].add(sample_row["s1_id"])
+    summary["by_country"][country] += 1
+    summary["by_source"][source] += 1
+    summary["by_cardinality"][cardinality] += 1
+    summary["name_token_jaccard_sum"] += signals["name_token_jaccard"]
+    summary["name_char_jaccard_sum"] += signals["name_char_jaccard"]
+    summary["address_token_jaccard_sum"] += signals["address_token_jaccard"]
+    summary["name_script_pairs"][
+        "+".join(signals["name_scripts_s1"]) + " -> " + "+".join(signals["name_scripts_target"])
+    ] += 1
+
+    flags = {
+        "no_shared_name_tokens": not bool(signals["name_shared_tokens"]),
+        "no_shared_address_tokens": not bool(signals["address_shared_tokens"]),
+        "name_and_address_tokens_disjoint": (
+            not signals["name_shared_tokens"] and not signals["address_shared_tokens"]
+        ),
+        "name_scripts_disjoint": signals["name_scripts_disjoint"],
+        "s1_name_missing": signals["name_missing_s1"],
+        "target_name_missing": signals["name_missing_target"],
+        "both_names_missing": signals["name_missing_s1"] and signals["name_missing_target"],
+        "both_addresses_missing": signals["address_missing_s1"] and signals["address_missing_target"],
+        "s1_address_missing": signals["address_missing_s1"],
+        "target_address_missing": signals["address_missing_target"],
+        "both_have_numbers_but_none_shared": (
+            bool(signals["numbers_s1"]) and bool(signals["numbers_target"])
+            and not signals["numbers_shared"]
+        ),
+    }
+    for name, enabled in flags.items():
+        if enabled:
+            summary["signal_counts"][name] += 1
+
+    limit = summary["sample_size"]
+    if limit <= 0:
+        return
+    summary["sample_seen"] += 1
+    if len(summary["sample"]) < limit:
+        summary["sample"].append(sample_row)
+    else:
+        replacement = summary["rng"].randrange(summary["sample_seen"])
+        if replacement < limit:
+            summary["sample"][replacement] = sample_row
+
+
 def extract_landmark_address_keys(country: str, addr: str) -> List[Tuple[str, str]]:
     """Channel I: Landmark / Relaxed address locality keys."""
     keys = []
@@ -356,6 +481,8 @@ def run_benchmark(
     validation_sample_s1: int = 0,
     seed: int = 42,
     max_composite_bucket_size: int = 300,
+    diagnose_misses: bool = False,
+    miss_sample_size: int = 5000,
 ):
     if max_composite_bucket_size < 1:
         raise ValueError("max_composite_bucket_size must be positive")
@@ -410,6 +537,19 @@ def run_benchmark(
 
     target_s1_ids = set(truth.keys())
     print(f"[{time.strftime('%H:%M:%S')}] Loaded {len(truth):,} S1 ground-truth entries with {total_true_links:,} links.")
+    truth_candidate_ids: Set[str] = set()
+    miss_summaries: Dict[int, Dict[str, Any]] = {}
+    if diagnose_misses:
+        for match_ids in truth.values():
+            truth_candidate_ids.update(match_ids)
+        miss_summaries = {
+            cap: _new_miss_summary(miss_sample_size, seed + cap)
+            for cap in composite_caps
+        }
+        print(
+            f"Miss diagnostics enabled for {len(truth_candidate_ids):,} unique GT targets; "
+            f"sampling up to {miss_sample_size:,} missed pairs per cap."
+        )
 
     # -----------------------------------------------------------------
     # Step 2: Vocabulary Pre-scan for Selective Inverted Indexes
@@ -468,6 +608,7 @@ def run_benchmark(
 
     total_indexed = 0
     candidate_source_map = {}  # EID -> 'S2' or 'S3'
+    truth_candidate_records: Dict[str, Tuple[str, str, str, str]] = {}
     candidate_country_counts = Counter()
 
     for path in [s2_path, s3_path]:
@@ -481,6 +622,8 @@ def run_benchmark(
                 total_indexed += 1
                 candidate_source_map[eid] = s_tag
                 candidate_country_counts[country] += 1
+                if diagnose_misses and eid in truth_candidate_ids:
+                    truth_candidate_records[eid] = (b_name, b_addr, country, s_tag)
 
                 legal_n = normalize_legal_name(b_name)
 
@@ -850,6 +993,47 @@ def run_benchmark(
                         u_ag_h_i_j_k_l | group_candidates
                     )
 
+            if diagnose_misses:
+                for posting_cap in composite_caps:
+                    union_name = f"A-L+H1-4@{posting_cap}"
+                    missed_ids = true_set.difference(unions_dict[union_name])
+                    summary = miss_summaries[posting_cap]
+                    for missed_id in sorted(missed_ids):
+                        target_record = truth_candidate_records.get(missed_id)
+                        if target_record is None:
+                            summary["missing_target_records"] += 1
+                            continue
+                        target_name, target_addr, target_country, target_source = target_record
+                        signals = diagnose_missed_link(
+                            row[1].strip(), b_addr, target_name, target_addr
+                        )
+                        sample_row: Dict[str, Any] = {
+                            "s1_id": s1_id,
+                            "true_target_id": missed_id,
+                            "target_source": target_source,
+                            "s1_country": country,
+                            "target_country": target_country,
+                            "cardinality_bucket": card_bucket,
+                            "name_missing_s1": signals["name_missing_s1"],
+                            "name_missing_target": signals["name_missing_target"],
+                            "name_token_jaccard": signals["name_token_jaccard"],
+                            "name_shared_token_count": len(signals["name_shared_tokens"]),
+                            "name_char_jaccard": signals["name_char_jaccard"],
+                            "name_scripts_s1": "|".join(signals["name_scripts_s1"]),
+                            "name_scripts_target": "|".join(signals["name_scripts_target"]),
+                            "name_scripts_disjoint": signals["name_scripts_disjoint"],
+                            "address_token_jaccard": signals["address_token_jaccard"],
+                            "address_shared_token_count": len(signals["address_shared_tokens"]),
+                            "number_count_s1": len(signals["numbers_s1"]),
+                            "number_count_target": len(signals["numbers_target"]),
+                            "shared_number_count": len(signals["numbers_shared"]),
+                            "address_missing_s1": signals["address_missing_s1"],
+                            "address_missing_target": signals["address_missing_target"],
+                        }
+                        _record_missed_link(
+                            summary, sample_row, signals, country, target_source, card_bucket
+                        )
+
             # Evaluate each nested union
             for u_name, cand_set in unions_dict.items():
                 m_dict = metrics[u_name]
@@ -914,6 +1098,60 @@ def run_benchmark(
                 print(f"  Processed {s1_count:,} / {len(target_s1_ids):,} S1 entities ({round(s1_count/len(target_s1_ids)*100, 1)}%)...")
 
     print(f"[{time.strftime('%H:%M:%S')}] Finished S1 evaluation in {round(time.time() - t_stream_start, 2)}s.")
+
+    if diagnose_misses:
+        miss_diagnostics: Dict[str, Any] = {
+            "validation_s1_count": s1_count,
+            "validation_seed": seed,
+            "validation_sample_s1": validation_sample_s1,
+            "candidate_union": "A-L+H1-4",
+            "candidate_posting_caps": {},
+            "notes": [
+                "Metrics describe true pairs excluded by candidate generation, not their semantic cause.",
+                "Token and script flags are overlapping diagnostics; inspect sampled pairs before assigning causes.",
+                "The TSV samples contain IDs and derived field-overlap features, not raw business text.",
+            ],
+        }
+        sample_columns = [
+            "s1_id", "true_target_id", "target_source", "s1_country", "target_country",
+            "cardinality_bucket", "name_missing_s1", "name_missing_target",
+            "name_token_jaccard", "name_shared_token_count",
+            "name_char_jaccard", "name_scripts_s1", "name_scripts_target",
+            "name_scripts_disjoint", "address_token_jaccard", "address_shared_token_count",
+            "number_count_s1", "number_count_target", "shared_number_count", "address_missing_s1",
+            "address_missing_target",
+        ]
+        for posting_cap, summary in miss_summaries.items():
+            missed_count = summary["missed_links"]
+            miss_diagnostics["candidate_posting_caps"][str(posting_cap)] = {
+                "missed_links": missed_count,
+                "missed_s1_entities": len(summary["missed_s1_ids"]),
+                "missing_target_records": summary["missing_target_records"],
+                "sample_size": len(summary["sample"]),
+                "sample_limit": summary["sample_size"],
+                "sample_seed": summary["sample_seed"],
+                "overlapping_signal_counts": dict(summary["signal_counts"].most_common()),
+                "misses_by_country": dict(summary["by_country"].most_common()),
+                "misses_by_source": dict(summary["by_source"].most_common()),
+                "misses_by_cardinality": dict(summary["by_cardinality"].most_common()),
+                "name_script_pairs": dict(summary["name_script_pairs"].most_common(100)),
+                "mean_name_token_jaccard": round(summary["name_token_jaccard_sum"] / max(missed_count, 1), 4),
+                "mean_name_character_jaccard": round(summary["name_char_jaccard_sum"] / max(missed_count, 1), 4),
+                "mean_address_token_jaccard": round(summary["address_token_jaccard_sum"] / max(missed_count, 1), 4),
+            }
+            out_tsv = os.path.join(
+                output_dir, f"missed_true_links_cap{posting_cap}_sample.tsv"
+            )
+            with open(out_tsv, "w", encoding="utf-8", newline="") as f:
+                writer = csv.DictWriter(f, fieldnames=sample_columns, delimiter="\t")
+                writer.writeheader()
+                writer.writerows(summary["sample"])
+            print(
+                f"Miss diagnostic cap {posting_cap}: {missed_count:,} missed links across "
+                f"{len(summary['missed_s1_ids']):,} S1s; saved {len(summary['sample']):,} sampled pairs."
+            )
+        with open(os.path.join(output_dir, "miss_link_diagnostics.json"), "w", encoding="utf-8") as f:
+            json.dump(miss_diagnostics, f, ensure_ascii=False, indent=2)
 
     # -----------------------------------------------------------------
     # Step 5: Assemble Benchmark Table & Report
@@ -1084,6 +1322,10 @@ if __name__ == "__main__":
     parser.add_argument("--seed", type=int, default=42)
     parser.add_argument("--max-composite-bucket-size", type=int, default=300,
                         help="Maximum posting-list size stored for H1-H4 composite keys")
+    parser.add_argument("--diagnose-misses", action="store_true",
+                        help="Report bounded miss-pair samples and field-overlap diagnostics for A-L+H1-4 caps")
+    parser.add_argument("--miss-sample-size", type=int, default=5000,
+                        help="Maximum sampled missed GT links written per composite posting cap")
     args = parser.parse_args()
 
     run_benchmark(
@@ -1097,4 +1339,6 @@ if __name__ == "__main__":
         validation_sample_s1=args.validation_sample_s1,
         seed=args.seed,
         max_composite_bucket_size=args.max_composite_bucket_size,
+        diagnose_misses=args.diagnose_misses,
+        miss_sample_size=args.miss_sample_size,
     )
