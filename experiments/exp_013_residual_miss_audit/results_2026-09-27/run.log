@@ -1,0 +1,353 @@
+Using 50,000 IDs from fixed validation split (seed=42).
+[08:14:35] Step 1: Loading ground truth from student_resource/dataset/train/train_ground_truth.tsv...
+[08:14:37] Loaded 50,000 S1 ground-truth entries with 173,509 links.
+Miss diagnostics enabled for 173,509 unique GT targets; sampling up to 5,000 missed pairs per cap.
+[08:14:37] Step 2: Scanning candidate vocabulary & document frequencies...
+  Vocabulary built: 262,009 selective words, 20,810 selective char 3-grams.
+[08:18:46] Step 3: Constructing candidate inverted indices...
+  Indexed S2 (total candidate records: 5,034,616)...
+  Indexed S3 (total candidate records: 10,320,219)...
+  H1-H4 retained keys: 31,664,448; index stats by cap: {'150': {'H1': {'retained_keys': 8080318, 'pruned_keys': 5374}, 'H2': {'retained_keys': 7139868, 'pruned_keys': 2532}, 'H3': {'retained_keys': 5345021, 'pruned_keys': 6239}, 'H4': {'retained_keys': 11082437, 'pruned_keys': 13969}}, '300': {'H1': {'retained_keys': 8083789, 'pruned_keys': 1903}, 'H2': {'retained_keys': 7141601, 'pruned_keys': 799}, 'H3': {'retained_keys': 5348504, 'pruned_keys': 2756}, 'H4': {'retained_keys': 11090554, 'pruned_keys': 5852}}}
+[08:53:15] Finished building indices in 2068.93s.
+[08:53:15] Step 4: Streaming S1 & evaluating nested candidate unions...
+[08:53:42] Finished S1 evaluation in 27.17s.
+Miss diagnostic cap 150: 12,821 missed links across 9,220 S1s; saved 5,000 sampled pairs.
+Miss diagnostic cap 300: 12,109 missed links across 8,886 S1s; saved 5,000 sampled pairs.
+
+==============================================================================================================
+NESTED CANDIDATE UNION BENCHMARK REPORT WITH ENTITY COVERAGE
+==============================================================================================================
+
+Union: A
+  Link Recall:        23.08%  |  Oracle Macro F0.5: 0.4507
+  Entity Coverage:    Full Coverage: 8.26%  |  Zero Coverage: 40.34%
+  Coverage Bins:      0%: 40.34%  |  1-49%: 34.33%  |  50-99%: 17.08%  |  100%: 8.26%
+  Candidate Volume:   Total: 297,738  |  Avg/S1: 5.95  |  Med: 1  |  P95: 30  |  P99: 30  |  Max: 30
+  Candidate Integrity: false candidates=257,685 | pair purity=13.4524% | reduction=99.9999% | avg singleton candidates=5.06
+  Sources & Country:  S2 Rec: 23.75%  |  S3 Rec: 22.45%  |  US Rec: 24.33%  |  IN Rec: 21.19%
+  Cardinality Rec:    1-match: 23.83%  |  2-matches: 22.92%  |  3-4: 23.23%  |  5+: 22.94%
+
+Union: A+B
+  Link Recall:        29.08%  |  Oracle Macro F0.5: 0.5057
+  Entity Coverage:    Full Coverage: 12.18%  |  Zero Coverage: 35.66%
+  Coverage Bins:      0%: 35.66%  |  1-49%: 31.44%  |  50-99%: 20.73%  |  100%: 12.18%
+  Candidate Volume:   Total: 413,713  |  Avg/S1: 8.27  |  Med: 3  |  P95: 30  |  P99: 30  |  Max: 45
+  Candidate Integrity: false candidates=363,253 | pair purity=12.1969% | reduction=99.9998% | avg singleton candidates=7.36
+  Sources & Country:  S2 Rec: 32.31%  |  S3 Rec: 26.05%  |  US Rec: 29.86%  |  IN Rec: 27.9%
+  Cardinality Rec:    1-match: 30.17%  |  2-matches: 29.19%  |  3-4: 29.25%  |  5+: 28.83%
+
+Union: A+B+C
+  Link Recall:        60.78%  |  Oracle Macro F0.5: 0.7854
+  Entity Coverage:    Full Coverage: 33.56%  |  Zero Coverage: 12.06%
+  Coverage Bins:      0%: 12.06%  |  1-49%: 16.38%  |  50-99%: 38.0%  |  100%: 33.56%
+  Candidate Volume:   Total: 708,490  |  Avg/S1: 14.17  |  Med: 14  |  P95: 35  |  P99: 45  |  Max: 60
+  Candidate Integrity: false candidates=603,037 | pair purity=14.8842% | reduction=99.9997% | avg singleton candidates=12.36
+  Sources & Country:  S2 Rec: 64.21%  |  S3 Rec: 57.55%  |  US Rec: 67.89%  |  IN Rec: 49.97%
+  Cardinality Rec:    1-match: 60.15%  |  2-matches: 60.92%  |  3-4: 60.77%  |  5+: 60.77%
+
+Union: A+B+C+D
+  Link Recall:        60.81%  |  Oracle Macro F0.5: 0.7855
+  Entity Coverage:    Full Coverage: 33.64%  |  Zero Coverage: 12.06%
+  Coverage Bins:      0%: 12.06%  |  1-49%: 16.38%  |  50-99%: 37.92%  |  100%: 33.64%
+  Candidate Volume:   Total: 710,600  |  Avg/S1: 14.21  |  Med: 14  |  P95: 35  |  P99: 45  |  Max: 60
+  Candidate Integrity: false candidates=605,096 | pair purity=14.8472% | reduction=99.9997% | avg singleton candidates=12.41
+  Sources & Country:  S2 Rec: 64.24%  |  S3 Rec: 57.58%  |  US Rec: 67.91%  |  IN Rec: 50.02%
+  Cardinality Rec:    1-match: 60.19%  |  2-matches: 60.95%  |  3-4: 60.8%  |  5+: 60.8%
+
+Union: A+B+C+D+E
+  Link Recall:        71.42%  |  Oracle Macro F0.5: 0.8576
+  Entity Coverage:    Full Coverage: 45.72%  |  Zero Coverage: 7.14%
+  Coverage Bins:      0%: 7.14%  |  1-49%: 10.71%  |  50-99%: 36.44%  |  100%: 45.72%
+  Candidate Volume:   Total: 1,238,458  |  Avg/S1: 24.77  |  Med: 22  |  P95: 53  |  P99: 66  |  Max: 93
+  Candidate Integrity: false candidates=1,114,544 | pair purity=10.0055% | reduction=99.9995% | avg singleton candidates=23.24
+  Sources & Country:  S2 Rec: 74.93%  |  S3 Rec: 68.11%  |  US Rec: 78.79%  |  IN Rec: 60.23%
+  Cardinality Rec:    1-match: 70.51%  |  2-matches: 71.44%  |  3-4: 71.37%  |  5+: 71.5%
+
+Union: A+B+C+D+E+F
+  Link Recall:        73.13%  |  Oracle Macro F0.5: 0.8704
+  Entity Coverage:    Full Coverage: 47.51%  |  Zero Coverage: 6.19%
+  Coverage Bins:      0%: 6.19%  |  1-49%: 9.78%  |  50-99%: 36.52%  |  100%: 47.51%
+  Candidate Volume:   Total: 2,597,208  |  Avg/S1: 51.94  |  Med: 49  |  P95: 81  |  P99: 95  |  Max: 123
+  Candidate Integrity: false candidates=2,470,323 | pair purity=4.8854% | reduction=99.9990% | avg singleton candidates=50.53
+  Sources & Country:  S2 Rec: 76.99%  |  S3 Rec: 69.5%  |  US Rec: 79.09%  |  IN Rec: 64.08%
+  Cardinality Rec:    1-match: 72.9%  |  2-matches: 73.25%  |  3-4: 73.08%  |  5+: 73.16%
+
+Union: A+B+C+D+E+F+G
+  Link Recall:        76.51%  |  Oracle Macro F0.5: 0.8884
+  Entity Coverage:    Full Coverage: 52.95%  |  Zero Coverage: 5.27%
+  Coverage Bins:      0%: 5.27%  |  1-49%: 8.11%  |  50-99%: 33.67%  |  100%: 52.95%
+  Candidate Volume:   Total: 2,965,005  |  Avg/S1: 59.3  |  Med: 58  |  P95: 92  |  P99: 104  |  Max: 134
+  Candidate Integrity: false candidates=2,832,251 | pair purity=4.4774% | reduction=99.9989% | avg singleton candidates=57.9
+  Sources & Country:  S2 Rec: 80.51%  |  S3 Rec: 72.75%  |  US Rec: 81.88%  |  IN Rec: 68.37%
+  Cardinality Rec:    1-match: 75.86%  |  2-matches: 76.72%  |  3-4: 76.54%  |  5+: 76.46%
+
+Union: Channel_H_Standalone
+  Link Recall:        8.16%  |  Oracle Macro F0.5: 0.1638
+  Entity Coverage:    Full Coverage: 8.61%  |  Zero Coverage: 81.35%
+  Coverage Bins:      0%: 81.35%  |  1-49%: 4.87%  |  50-99%: 5.17%  |  100%: 8.61%
+  Candidate Volume:   Total: 127,929  |  Avg/S1: 2.56  |  Med: 0  |  P95: 15  |  P99: 15  |  Max: 28
+  Candidate Integrity: false candidates=113,766 | pair purity=11.0710% | reduction=100.0000% | avg singleton candidates=2.48
+  Sources & Country:  S2 Rec: 8.15%  |  S3 Rec: 8.17%  |  US Rec: 6.33%  |  IN Rec: 10.94%
+  Cardinality Rec:    1-match: 8.99%  |  2-matches: 7.89%  |  3-4: 8.0%  |  5+: 8.38%
+
+Union: Channel_I_Standalone
+  Link Recall:        10.36%  |  Oracle Macro F0.5: 0.2261
+  Entity Coverage:    Full Coverage: 7.03%  |  Zero Coverage: 71.34%
+  Coverage Bins:      0%: 71.34%  |  1-49%: 14.07%  |  50-99%: 7.57%  |  100%: 7.03%
+  Candidate Volume:   Total: 644,849  |  Avg/S1: 12.9  |  Med: 15  |  P95: 30  |  P99: 44  |  Max: 60
+  Candidate Integrity: false candidates=626,877 | pair purity=2.7870% | reduction=99.9998% | avg singleton candidates=12.93
+  Sources & Country:  S2 Rec: 17.32%  |  S3 Rec: 3.81%  |  US Rec: 6.33%  |  IN Rec: 16.47%
+  Cardinality Rec:    1-match: 10.82%  |  2-matches: 9.91%  |  3-4: 10.38%  |  5+: 10.42%
+
+Union: A-G+H
+  Link Recall:        77.92%  |  Oracle Macro F0.5: 0.8968
+  Entity Coverage:    Full Coverage: 54.92%  |  Zero Coverage: 4.76%
+  Coverage Bins:      0%: 4.76%  |  1-49%: 7.42%  |  50-99%: 32.9%  |  100%: 54.92%
+  Candidate Volume:   Total: 3,077,824  |  Avg/S1: 61.56  |  Med: 60  |  P95: 96  |  P99: 107  |  Max: 141
+  Candidate Integrity: false candidates=2,942,633 | pair purity=4.3924% | reduction=99.9989% | avg singleton candidates=60.3
+  Sources & Country:  S2 Rec: 81.76%  |  S3 Rec: 74.3%  |  US Rec: 82.62%  |  IN Rec: 70.78%
+  Cardinality Rec:    1-match: 77.19%  |  2-matches: 78.04%  |  3-4: 77.95%  |  5+: 77.88%
+
+Union: A-G+H+I
+  Link Recall:        78.82%  |  Oracle Macro F0.5: 0.9023
+  Entity Coverage:    Full Coverage: 56.11%  |  Zero Coverage: 4.42%
+  Coverage Bins:      0%: 4.42%  |  1-49%: 6.98%  |  50-99%: 32.49%  |  100%: 56.11%
+  Candidate Volume:   Total: 3,634,007  |  Avg/S1: 72.68  |  Med: 72  |  P95: 115  |  P99: 130  |  Max: 163
+  Candidate Integrity: false candidates=3,497,255 | pair purity=3.7631% | reduction=99.9986% | avg singleton candidates=71.68
+  Sources & Country:  S2 Rec: 83.1%  |  S3 Rec: 74.78%  |  US Rec: 83.05%  |  IN Rec: 72.38%
+  Cardinality Rec:    1-match: 77.87%  |  2-matches: 78.97%  |  3-4: 78.84%  |  5+: 78.78%
+
+Union: Channel_J_Standalone
+  Link Recall:        53.74%  |  Oracle Macro F0.5: 0.7182
+  Entity Coverage:    Full Coverage: 27.76%  |  Zero Coverage: 18.63%
+  Coverage Bins:      0%: 18.63%  |  1-49%: 16.82%  |  50-99%: 36.79%  |  100%: 27.76%
+  Candidate Volume:   Total: 1,024,670  |  Avg/S1: 20.49  |  Med: 19  |  P95: 40  |  P99: 43  |  Max: 45
+  Candidate Integrity: false candidates=931,424 | pair purity=9.1001% | reduction=99.9996% | avg singleton candidates=19.22
+  Sources & Country:  S2 Rec: 59.82%  |  S3 Rec: 48.02%  |  US Rec: 56.61%  |  IN Rec: 49.38%
+  Cardinality Rec:    1-match: 54.35%  |  2-matches: 53.6%  |  3-4: 53.95%  |  5+: 53.53%
+
+Union: A-G+H+I+J
+  Link Recall:        80.91%  |  Oracle Macro F0.5: 0.9129
+  Entity Coverage:    Full Coverage: 59.63%  |  Zero Coverage: 3.90%
+  Coverage Bins:      0%: 3.9%  |  1-49%: 6.08%  |  50-99%: 30.4%  |  100%: 59.63%
+  Candidate Volume:   Total: 3,834,610  |  Avg/S1: 76.69  |  Med: 76  |  P95: 122  |  P99: 137  |  Max: 172
+  Candidate Integrity: false candidates=3,694,220 | pair purity=3.6611% | reduction=99.9986% | avg singleton candidates=75.71
+  Sources & Country:  S2 Rec: 84.98%  |  S3 Rec: 77.09%  |  US Rec: 84.87%  |  IN Rec: 74.91%
+  Cardinality Rec:    1-match: 80.46%  |  2-matches: 80.87%  |  3-4: 80.97%  |  5+: 80.88%
+
+Union: Channel_K_Standalone
+  Link Recall:        6.33%  |  Oracle Macro F0.5: 0.1437
+  Entity Coverage:    Full Coverage: 7.56%  |  Zero Coverage: 83.36%
+  Coverage Bins:      0%: 83.36%  |  1-49%: 4.95%  |  50-99%: 4.13%  |  100%: 7.56%
+  Candidate Volume:   Total: 660,609  |  Avg/S1: 13.21  |  Med: 15  |  P95: 34  |  P99: 45  |  Max: 93
+  Candidate Integrity: false candidates=649,631 | pair purity=1.6618% | reduction=99.9998% | avg singleton candidates=12.93
+  Sources & Country:  S2 Rec: 9.05%  |  S3 Rec: 3.76%  |  US Rec: 7.67%  |  IN Rec: 4.29%
+  Cardinality Rec:    1-match: 6.3%  |  2-matches: 6.18%  |  3-4: 6.29%  |  5+: 6.4%
+
+Union: A-G+H+I+J+K
+  Link Recall:        81.03%  |  Oracle Macro F0.5: 0.9134
+  Entity Coverage:    Full Coverage: 59.86%  |  Zero Coverage: 3.88%
+  Coverage Bins:      0%: 3.88%  |  1-49%: 6.05%  |  50-99%: 30.22%  |  100%: 59.86%
+  Candidate Volume:   Total: 4,346,301  |  Avg/S1: 86.93  |  Med: 86  |  P95: 135  |  P99: 153  |  Max: 198
+  Candidate Integrity: false candidates=4,205,714 | pair purity=3.2346% | reduction=99.9984% | avg singleton candidates=85.7
+  Sources & Country:  S2 Rec: 85.11%  |  S3 Rec: 77.18%  |  US Rec: 85.02%  |  IN Rec: 74.96%
+  Cardinality Rec:    1-match: 80.53%  |  2-matches: 80.98%  |  3-4: 81.08%  |  5+: 81.0%
+
+Union: Channel_L_Standalone
+  Link Recall:        15.06%  |  Oracle Macro F0.5: 0.3112
+  Entity Coverage:    Full Coverage: 7.35%  |  Zero Coverage: 59.59%
+  Coverage Bins:      0%: 59.59%  |  1-49%: 21.5%  |  50-99%: 11.56%  |  100%: 7.35%
+  Candidate Volume:   Total: 317,824  |  Avg/S1: 6.36  |  Med: 3  |  P95: 15  |  P99: 15  |  Max: 15
+  Candidate Integrity: false candidates=291,699 | pair purity=8.2200% | reduction=99.9999% | avg singleton candidates=6.0
+  Sources & Country:  S2 Rec: 26.0%  |  S3 Rec: 4.77%  |  US Rec: 21.26%  |  IN Rec: 5.64%
+  Cardinality Rec:    1-match: 15.33%  |  2-matches: 15.45%  |  3-4: 15.01%  |  5+: 15.01%
+
+Union: A-G+H+I+J+K+L
+  Link Recall:        81.71%  |  Oracle Macro F0.5: 0.9174
+  Entity Coverage:    Full Coverage: 60.85%  |  Zero Coverage: 3.65%
+  Coverage Bins:      0%: 3.65%  |  1-49%: 5.68%  |  50-99%: 29.82%  |  100%: 60.85%
+  Candidate Volume:   Total: 4,630,983  |  Avg/S1: 92.62  |  Med: 91  |  P95: 145  |  P99: 164  |  Max: 208
+  Candidate Integrity: false candidates=4,489,208 | pair purity=3.0614% | reduction=99.9983% | avg singleton candidates=91.48
+  Sources & Country:  S2 Rec: 86.11%  |  S3 Rec: 77.58%  |  US Rec: 86.01%  |  IN Rec: 75.19%
+  Cardinality Rec:    1-match: 81.33%  |  2-matches: 81.63%  |  3-4: 81.77%  |  5+: 81.68%
+
+Union: H1_Standalone@150
+  Link Recall:        62.07%  |  Oracle Macro F0.5: 0.7678
+  Entity Coverage:    Full Coverage: 38.57%  |  Zero Coverage: 15.93%
+  Coverage Bins:      0%: 15.93%  |  1-49%: 11.92%  |  50-99%: 33.58%  |  100%: 38.57%
+  Candidate Volume:   Total: 1,233,026  |  Avg/S1: 24.66  |  Med: 8  |  P95: 118  |  P99: 175  |  Max: 368
+  Candidate Integrity: false candidates=1,125,326 | pair purity=8.7346% | reduction=99.9995% | avg singleton candidates=22.7
+  Sources & Country:  S2 Rec: 63.09%  |  S3 Rec: 61.12%  |  US Rec: 70.19%  |  IN Rec: 49.74%
+  Cardinality Rec:    1-match: 60.27%  |  2-matches: 61.95%  |  3-4: 61.97%  |  5+: 62.27%
+
+Union: H2_Standalone@150
+  Link Recall:        54.04%  |  Oracle Macro F0.5: 0.7132
+  Entity Coverage:    Full Coverage: 28.30%  |  Zero Coverage: 19.93%
+  Coverage Bins:      0%: 19.93%  |  1-49%: 14.91%  |  50-99%: 36.87%  |  100%: 28.3%
+  Candidate Volume:   Total: 892,618  |  Avg/S1: 17.85  |  Med: 4  |  P95: 92  |  P99: 153  |  Max: 294
+  Candidate Integrity: false candidates=798,848 | pair purity=10.5051% | reduction=99.9997% | avg singleton candidates=15.8
+  Sources & Country:  S2 Rec: 54.17%  |  S3 Rec: 53.93%  |  US Rec: 62.83%  |  IN Rec: 40.71%
+  Cardinality Rec:    1-match: 52.83%  |  2-matches: 54.02%  |  3-4: 53.76%  |  5+: 54.4%
+
+Union: H3_Standalone@150
+  Link Recall:        44.81%  |  Oracle Macro F0.5: 0.5993
+  Entity Coverage:    Full Coverage: 25.79%  |  Zero Coverage: 32.62%
+  Coverage Bins:      0%: 32.62%  |  1-49%: 13.44%  |  50-99%: 28.15%  |  100%: 25.79%
+  Candidate Volume:   Total: 815,288  |  Avg/S1: 16.31  |  Med: 4  |  P95: 93  |  P99: 147  |  Max: 267
+  Candidate Integrity: false candidates=737,543 | pair purity=9.5359% | reduction=99.9997% | avg singleton candidates=15.22
+  Sources & Country:  S2 Rec: 47.63%  |  S3 Rec: 42.15%  |  US Rec: 60.92%  |  IN Rec: 20.35%
+  Cardinality Rec:    1-match: 43.11%  |  2-matches: 45.09%  |  3-4: 44.59%  |  5+: 45.04%
+
+Union: H4_Standalone@150
+  Link Recall:        58.41%  |  Oracle Macro F0.5: 0.7451
+  Entity Coverage:    Full Coverage: 33.60%  |  Zero Coverage: 17.36%
+  Coverage Bins:      0%: 17.36%  |  1-49%: 13.64%  |  50-99%: 35.4%  |  100%: 33.6%
+  Candidate Volume:   Total: 2,092,540  |  Avg/S1: 41.85  |  Med: 15  |  P95: 160  |  P99: 255  |  Max: 541
+  Candidate Integrity: false candidates=1,991,201 | pair purity=4.8429% | reduction=99.9992% | avg singleton candidates=40.85
+  Sources & Country:  S2 Rec: 63.97%  |  S3 Rec: 53.17%  |  US Rec: 70.95%  |  IN Rec: 39.36%
+  Cardinality Rec:    1-match: 58.22%  |  2-matches: 58.58%  |  3-4: 58.35%  |  5+: 58.43%
+
+Union: A-L+H1@150
+  Link Recall:        88.01%  |  Oracle Macro F0.5: 0.9506
+  Entity Coverage:    Full Coverage: 72.01%  |  Zero Coverage: 1.82%
+  Coverage Bins:      0%: 1.82%  |  1-49%: 3.34%  |  50-99%: 22.83%  |  100%: 72.01%
+  Candidate Volume:   Total: 5,655,954  |  Avg/S1: 113.12  |  Med: 102  |  P95: 226  |  P99: 293  |  Max: 452
+  Candidate Integrity: false candidates=5,503,241 | pair purity=2.7000% | reduction=99.9979% | avg singleton candidates=111.72
+  Marginal Recall Gain: 10,938 additional true links beyond A-L
+  Sources & Country:  S2 Rec: 90.6%  |  S3 Rec: 85.58%  |  US Rec: 91.3%  |  IN Rec: 83.04%
+  Cardinality Rec:    1-match: 87.74%  |  2-matches: 87.71%  |  3-4: 88.03%  |  5+: 88.07%
+
+Union: A-L+H2@150
+  Link Recall:        86.15%  |  Oracle Macro F0.5: 0.9410
+  Entity Coverage:    Full Coverage: 68.45%  |  Zero Coverage: 2.36%
+  Coverage Bins:      0%: 2.36%  |  1-49%: 3.95%  |  50-99%: 25.24%  |  100%: 68.45%
+  Candidate Volume:   Total: 5,430,914  |  Avg/S1: 108.62  |  Med: 99  |  P95: 211  |  P99: 292  |  Max: 441
+  Candidate Integrity: false candidates=5,281,444 | pair purity=2.7522% | reduction=99.9980% | avg singleton candidates=107.1
+  Marginal Recall Gain: 7,695 additional true links beyond A-L
+  Sources & Country:  S2 Rec: 88.65%  |  S3 Rec: 83.79%  |  US Rec: 90.17%  |  IN Rec: 80.04%
+  Cardinality Rec:    1-match: 86.15%  |  2-matches: 85.99%  |  3-4: 86.08%  |  5+: 86.25%
+
+Union: A-L+H3@150
+  Link Recall:        85.82%  |  Oracle Macro F0.5: 0.9388
+  Entity Coverage:    Full Coverage: 68.27%  |  Zero Coverage: 2.50%
+  Coverage Bins:      0%: 2.5%  |  1-49%: 4.17%  |  50-99%: 25.06%  |  100%: 68.27%
+  Candidate Volume:   Total: 5,338,460  |  Avg/S1: 106.77  |  Med: 99  |  P95: 202  |  P99: 267  |  Max: 407
+  Candidate Integrity: false candidates=5,189,563 | pair purity=2.7891% | reduction=99.9980% | avg singleton candidates=105.87
+  Marginal Recall Gain: 7,122 additional true links beyond A-L
+  Sources & Country:  S2 Rec: 89.25%  |  S3 Rec: 82.58%  |  US Rec: 90.48%  |  IN Rec: 78.74%
+  Cardinality Rec:    1-match: 85.65%  |  2-matches: 85.7%  |  3-4: 85.85%  |  5+: 85.81%
+
+Union: A-L+H4@150
+  Link Recall:        88.07%  |  Oracle Macro F0.5: 0.9483
+  Entity Coverage:    Full Coverage: 72.79%  |  Zero Coverage: 2.16%
+  Coverage Bins:      0%: 2.16%  |  1-49%: 3.39%  |  50-99%: 21.66%  |  100%: 72.79%
+  Candidate Volume:   Total: 6,580,092  |  Avg/S1: 131.6  |  Med: 116  |  P95: 275  |  P99: 372  |  Max: 674
+  Candidate Integrity: false candidates=6,427,290 | pair purity=2.3222% | reduction=99.9975% | avg singleton candidates=130.85
+  Marginal Recall Gain: 11,027 additional true links beyond A-L
+  Sources & Country:  S2 Rec: 90.55%  |  S3 Rec: 85.73%  |  US Rec: 93.68%  |  IN Rec: 79.54%
+  Cardinality Rec:    1-match: 87.93%  |  2-matches: 87.98%  |  3-4: 88.06%  |  5+: 88.1%
+
+Union: A-L+H1-4@150
+  Link Recall:        92.61%  |  Oracle Macro F0.5: 0.9709
+  Entity Coverage:    Full Coverage: 81.56%  |  Zero Coverage: 1.01%
+  Coverage Bins:      0%: 1.01%  |  1-49%: 1.77%  |  50-99%: 15.66%  |  100%: 81.56%
+  Candidate Volume:   Total: 8,865,398  |  Avg/S1: 177.31  |  Med: 148  |  P95: 392  |  P99: 531  |  Max: 935
+  Candidate Integrity: false candidates=8,704,710 | pair purity=1.8125% | reduction=99.9967% | avg singleton candidates=176.47
+  Marginal Recall Gain: 18,913 additional true links beyond A-L
+  Sources & Country:  S2 Rec: 93.74%  |  S3 Rec: 91.55%  |  US Rec: 95.9%  |  IN Rec: 87.62%
+  Cardinality Rec:    1-match: 92.33%  |  2-matches: 92.3%  |  3-4: 92.64%  |  5+: 92.66%
+
+Union: A-L+H1-4@300
+  Link Recall:        93.02%  |  Oracle Macro F0.5: 0.9732
+  Entity Coverage:    Full Coverage: 82.23%  |  Zero Coverage: 0.87%
+  Coverage Bins:      0%: 0.87%  |  1-49%: 1.59%  |  50-99%: 15.31%  |  100%: 82.23%
+  Candidate Volume:   Total: 12,459,148  |  Avg/S1: 249.18  |  Med: 166  |  P95: 698  |  P99: 1000  |  Max: 1766
+  Candidate Integrity: false candidates=12,297,748 | pair purity=1.2954% | reduction=99.9954% | avg singleton candidates=248.52
+  Marginal Recall Gain: 19,625 additional true links beyond A-L
+  Sources & Country:  S2 Rec: 94.04%  |  S3 Rec: 92.06%  |  US Rec: 95.98%  |  IN Rec: 88.53%
+  Cardinality Rec:    1-match: 92.75%  |  2-matches: 92.77%  |  3-4: 93.04%  |  5+: 93.07%
+
+Union: A-L+H1+H4@150
+  Link Recall:        91.82%  |  Oracle Macro F0.5: 0.9671
+  Entity Coverage:    Full Coverage: 80.01%  |  Zero Coverage: 1.18%
+  Coverage Bins:      0%: 1.18%  |  1-49%: 2.08%  |  50-99%: 16.72%  |  100%: 80.01%
+  Candidate Volume:   Total: 7,599,716  |  Avg/S1: 151.99  |  Med: 131  |  P95: 320  |  P99: 427  |  Max: 724
+  Candidate Integrity: false candidates=7,440,402 | pair purity=2.0963% | reduction=99.9972% | avg singleton candidates=151.06
+  Marginal Recall Gain: 17,539 additional true links beyond A-L
+  Sources & Country:  S2 Rec: 93.22%  |  S3 Rec: 90.5%  |  US Rec: 95.76%  |  IN Rec: 85.84%
+  Cardinality Rec:    1-match: 91.27%  |  2-matches: 91.51%  |  3-4: 91.85%  |  5+: 91.87%
+
+Union: A-L+H1+H2+H4@150
+  Link Recall:        92.33%  |  Oracle Macro F0.5: 0.9696
+  Entity Coverage:    Full Coverage: 80.98%  |  Zero Coverage: 1.06%
+  Coverage Bins:      0%: 1.06%  |  1-49%: 1.87%  |  50-99%: 16.09%  |  100%: 80.98%
+  Candidate Volume:   Total: 8,384,290  |  Avg/S1: 167.69  |  Med: 141  |  P95: 366  |  P99: 493  |  Max: 902
+  Candidate Integrity: false candidates=8,224,091 | pair purity=1.9107% | reduction=99.9969% | avg singleton candidates=166.5
+  Marginal Recall Gain: 18,424 additional true links beyond A-L
+  Sources & Country:  S2 Rec: 93.4%  |  S3 Rec: 91.32%  |  US Rec: 95.89%  |  IN Rec: 86.93%
+  Cardinality Rec:    1-match: 91.99%  |  2-matches: 91.99%  |  3-4: 92.35%  |  5+: 92.4%
+
+Union: A-L+H1+H3+H4@150
+  Link Recall:        92.14%  |  Oracle Macro F0.5: 0.9686
+  Entity Coverage:    Full Coverage: 80.63%  |  Zero Coverage: 1.11%
+  Coverage Bins:      0%: 1.11%  |  1-49%: 1.96%  |  50-99%: 16.29%  |  100%: 80.63%
+  Candidate Volume:   Total: 8,083,093  |  Avg/S1: 161.66  |  Med: 136  |  P95: 348  |  P99: 466  |  Max: 821
+  Candidate Integrity: false candidates=7,923,223 | pair purity=1.9778% | reduction=99.9970% | avg singleton candidates=161.09
+  Marginal Recall Gain: 18,095 additional true links beyond A-L
+  Sources & Country:  S2 Rec: 93.57%  |  S3 Rec: 90.79%  |  US Rec: 95.77%  |  IN Rec: 86.64%
+  Cardinality Rec:    1-match: 91.65%  |  2-matches: 91.87%  |  3-4: 92.19%  |  5+: 92.17%
+
+Union: A-L+H1+H4@300
+  Link Recall:        92.20%  |  Oracle Macro F0.5: 0.9692
+  Entity Coverage:    Full Coverage: 80.59%  |  Zero Coverage: 1.06%
+  Coverage Bins:      0%: 1.06%  |  1-49%: 1.9%  |  50-99%: 16.45%  |  100%: 80.59%
+  Candidate Volume:   Total: 10,058,957  |  Avg/S1: 201.18  |  Med: 142  |  P95: 529  |  P99: 750  |  Max: 1491
+  Candidate Integrity: false candidates=9,898,986 | pair purity=1.5903% | reduction=99.9963% | avg singleton candidates=199.89
+  Marginal Recall Gain: 18,196 additional true links beyond A-L
+  Sources & Country:  S2 Rec: 93.44%  |  S3 Rec: 91.02%  |  US Rec: 95.84%  |  IN Rec: 86.67%
+  Cardinality Rec:    1-match: 91.57%  |  2-matches: 91.92%  |  3-4: 92.21%  |  5+: 92.27%
+
+Union: A-L+H1+H2+H4@300
+  Link Recall:        92.67%  |  Oracle Macro F0.5: 0.9716
+  Entity Coverage:    Full Coverage: 81.49%  |  Zero Coverage: 0.94%
+  Coverage Bins:      0%: 0.94%  |  1-49%: 1.72%  |  50-99%: 15.85%  |  100%: 81.49%
+  Candidate Volume:   Total: 11,369,231  |  Avg/S1: 227.38  |  Med: 156  |  P95: 624  |  P99: 900  |  Max: 1678
+  Candidate Integrity: false candidates=11,208,432 | pair purity=1.4143% | reduction=99.9958% | avg singleton candidates=225.44
+  Marginal Recall Gain: 19,024 additional true links beyond A-L
+  Sources & Country:  S2 Rec: 93.61%  |  S3 Rec: 91.79%  |  US Rec: 95.97%  |  IN Rec: 87.67%
+  Cardinality Rec:    1-match: 92.26%  |  2-matches: 92.38%  |  3-4: 92.68%  |  5+: 92.75%
+
+Union: A-L+H1+H3+H4@300
+  Link Recall:        92.58%  |  Oracle Macro F0.5: 0.9711
+  Entity Coverage:    Full Coverage: 81.36%  |  Zero Coverage: 0.97%
+  Coverage Bins:      0%: 0.97%  |  1-49%: 1.76%  |  50-99%: 15.91%  |  100%: 81.36%
+  Candidate Volume:   Total: 11,153,998  |  Avg/S1: 223.08  |  Med: 152  |  P95: 607  |  P99: 853  |  Max: 1713
+  Candidate Integrity: false candidates=10,993,361 | pair purity=1.4402% | reduction=99.9958% | avg singleton candidates=223.08
+  Marginal Recall Gain: 18,862 additional true links beyond A-L
+  Sources & Country:  S2 Rec: 93.88%  |  S3 Rec: 91.36%  |  US Rec: 95.85%  |  IN Rec: 87.62%
+  Cardinality Rec:    1-match: 92.14%  |  2-matches: 92.37%  |  3-4: 92.6%  |  5+: 92.62%
+
+[08:53:42] Benchmark report successfully saved to outputs/exp013_residual_miss_audit/BLOCKING_NESTED_UNION_REPORT.md.
+	Command being timed: "python3 code/business_entity_resolution/src/evaluate_blocking_system.py --data-dir student_resource/dataset --output-dir outputs/exp013_residual_miss_audit --validation-split outputs/split/val_s1_ids.json --validation-sample-s1 50000 --seed 42 --max-bucket-size 80 --cap-per-channel 30 --max-composite-bucket-size 300 --diagnose-misses --miss-sample-size 5000"
+	User time (seconds): 2359.02
+	System time (seconds): 20.46
+	Percent of CPU this job got: 100%
+	Elapsed (wall clock) time (h:mm:ss or m:ss): 39:39.04
+	Average shared text size (kbytes): 0
+	Average unshared data size (kbytes): 0
+	Average stack size (kbytes): 0
+	Average total size (kbytes): 0
+	Maximum resident set size (kbytes): 27303256
+	Average resident set size (kbytes): 0
+	Major (requiring I/O) page faults: 25
+	Minor (reclaiming a frame) page faults: 7715072
+	Voluntary context switches: 72
+	Involuntary context switches: 10446
+	Swaps: 0
+	File system inputs: 55056
+	File system outputs: 2768
+	Socket messages sent: 0
+	Socket messages received: 0
+	Signals delivered: 0
+	Page size (bytes): 4096
+	Exit status: 0

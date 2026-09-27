@@ -271,8 +271,8 @@ def run_training_and_evaluation(
 
     # 2. Sample Train & Val S1 subsets
     rng = random.Random(42)
-    eval_train_s1 = sorted(rng.sample(list(train_s1_ids), min(train_sample_s1, len(train_s1_ids))))
-    eval_val_s1 = sorted(rng.sample(list(val_s1_ids), min(val_sample_s1, len(val_s1_ids))))
+    eval_train_s1 = sorted(rng.sample(sorted(train_s1_ids), min(train_sample_s1, len(train_s1_ids))))
+    eval_val_s1 = sorted(rng.sample(sorted(val_s1_ids), min(val_sample_s1, len(val_s1_ids))))
     all_needed_s1 = set(eval_train_s1) | set(eval_val_s1)
 
     # 3. Load Ground Truth
@@ -569,13 +569,15 @@ def run_training_and_evaluation(
     best_config = None
     best_preds: Dict[str, Set[str]] = {}
 
-    tau_candidates = [0.45, 0.50, 0.55, 0.60, 0.65, 0.70]
-    margin_deltas = [0.0, 0.05, 0.10, 0.15]
-    multi_deltas = [0.10, 0.15, 0.20, 1.0]
+    tau_candidates = [0.45, 0.50, 0.55, 0.60, 0.65, 0.70, 0.75, 0.80, 0.85, 0.90, 0.95]
+    margin_deltas = [0.0, 0.05, 0.10, 0.15, 0.20]
+    multi_deltas = [0.0, 0.03, 0.05, 0.10, 0.15, 0.20, 1.0]
 
     for tau in tau_candidates:
         for m_delta in margin_deltas:
             tau_null = tau + m_delta
+            if tau_null > 1.0:
+                continue
             for m_multi in multi_deltas:
                 current_preds: Dict[str, Set[str]] = {}
                 for s1_id in eval_val_s1:
@@ -647,6 +649,27 @@ def run_training_and_evaluation(
             f.write(f"- `{fname}`: {gain:,.1f}\n")
 
     print(f"\n[{time.strftime('%H:%M:%S')}] Saved calibration report to {report_path}.")
+    model_path = os.path.join(output_dir, "matcher_a_l.txt")
+    model.save_model(model_path)
+    config_path = os.path.join(output_dir, "matcher_a_l_config.json")
+    with open(config_path, "w", encoding="utf-8") as f:
+        json.dump({
+            "blocking": "A-L",
+            "max_bucket_size": max_bucket_size,
+            "cap_per_channel": cap_per_channel,
+            "train_sample_s1": train_sample_s1,
+            "val_sample_s1": val_sample_s1,
+            "seed": 42,
+            "feature_names": FEATURE_NAMES,
+            "tau": best_config[0],
+            "tau_null": best_config[1],
+            "delta_multi": best_config[2],
+            "validation_macro_f05": best_config[3],
+            "validation_precision": best_config[4],
+            "validation_recall": best_config[5],
+            "singleton_accuracy": best_config[6],
+        }, f, indent=2, sort_keys=True)
+    print(f"Saved matcher model to {model_path} and calibration to {config_path}.")
     print(f"Total EXP-009 elapsed time: {time.time() - t_start:.2f}s")
 
 

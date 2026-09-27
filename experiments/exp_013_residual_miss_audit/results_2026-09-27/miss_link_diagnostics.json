@@ -1,0 +1,123 @@
+{
+  "validation_s1_count": 50000,
+  "validation_seed": 42,
+  "validation_sample_s1": 50000,
+  "candidate_union": "A-L+H1-4",
+  "candidate_posting_caps": {
+    "150": {
+      "missed_links": 12821,
+      "missed_s1_entities": 9220,
+      "missing_target_records": 0,
+      "sample_size": 5000,
+      "sample_limit": 5000,
+      "sample_seed": 192,
+      "overlapping_signal_counts": {
+        "no_shared_name_tokens": 7254,
+        "name_scripts_disjoint": 4107,
+        "no_shared_address_tokens": 2179,
+        "both_have_numbers_but_none_shared": 2153,
+        "target_address_missing": 2045,
+        "name_and_address_tokens_disjoint": 139
+      },
+      "misses_by_country": {
+        "India": 8529,
+        "US": 4292
+      },
+      "misses_by_source": {
+        "S3": 7558,
+        "S2": 5263
+      },
+      "misses_by_cardinality": {
+        "3_4_matches": 5873,
+        "5_plus_matches": 5425,
+        "2_matches": 1321,
+        "1_match": 202
+      },
+      "name_script_pairs": {
+        "LATIN -> LATIN": 8493,
+        "LATIN -> DEVANAGARI": 2385,
+        "LATIN -> TELUGU": 342,
+        "LATIN -> KANNADA": 339,
+        "LATIN -> TAMIL": 309,
+        "LATIN -> BENGALI": 288,
+        "LATIN -> GUJARATI": 225,
+        "LATIN -> MALAYALAM": 122,
+        "LATIN -> DEVANAGARI+LATIN": 117,
+        "LATIN -> ORIYA": 66,
+        "LATIN -> LATIN+TELUGU": 33,
+        "LATIN -> GURMUKHI": 31,
+        "LATIN -> BENGALI+LATIN": 18,
+        "LATIN -> KANNADA+LATIN": 16,
+        "LATIN -> LATIN+TAMIL": 11,
+        "LATIN -> GUJARATI+LATIN": 11,
+        "LATIN -> LATIN+MALAYALAM": 8,
+        "LATIN -> LATIN+ORIYA": 3,
+        "LATIN -> ": 3,
+        "LATIN -> GURMUKHI+LATIN": 1
+      },
+      "mean_name_token_jaccard": 0.2826,
+      "mean_name_character_jaccard": 0.5246,
+      "mean_address_token_jaccard": 0.4744
+    },
+    "300": {
+      "missed_links": 12109,
+      "missed_s1_entities": 8886,
+      "missing_target_records": 0,
+      "sample_size": 5000,
+      "sample_limit": 5000,
+      "sample_seed": 342,
+      "overlapping_signal_counts": {
+        "no_shared_name_tokens": 6974,
+        "name_scripts_disjoint": 3908,
+        "no_shared_address_tokens": 2179,
+        "both_have_numbers_but_none_shared": 2065,
+        "target_address_missing": 2045,
+        "name_and_address_tokens_disjoint": 139
+      },
+      "misses_by_country": {
+        "India": 7901,
+        "US": 4208
+      },
+      "misses_by_source": {
+        "S3": 7100,
+        "S2": 5009
+      },
+      "misses_by_cardinality": {
+        "3_4_matches": 5557,
+        "5_plus_matches": 5121,
+        "2_matches": 1240,
+        "1_match": 191
+      },
+      "name_script_pairs": {
+        "LATIN -> LATIN": 8009,
+        "LATIN -> DEVANAGARI": 2264,
+        "LATIN -> TELUGU": 323,
+        "LATIN -> KANNADA": 319,
+        "LATIN -> TAMIL": 295,
+        "LATIN -> BENGALI": 281,
+        "LATIN -> GUJARATI": 210,
+        "LATIN -> MALAYALAM": 119,
+        "LATIN -> DEVANAGARI+LATIN": 102,
+        "LATIN -> ORIYA": 66,
+        "LATIN -> GURMUKHI": 31,
+        "LATIN -> LATIN+TELUGU": 29,
+        "LATIN -> KANNADA+LATIN": 14,
+        "LATIN -> BENGALI+LATIN": 12,
+        "LATIN -> LATIN+TAMIL": 11,
+        "LATIN -> GUJARATI+LATIN": 9,
+        "LATIN -> LATIN+MALAYALAM": 8,
+        "LATIN -> LATIN+ORIYA": 3,
+        "LATIN -> ": 3,
+        "LATIN -> GURMUKHI+LATIN": 1
+      },
+      "mean_name_token_jaccard": 0.275,
+      "mean_name_character_jaccard": 0.5217,
+      "mean_address_token_jaccard": 0.4699
+    }
+  },
+  "notes": [
+    "Metrics describe true pairs excluded by candidate generation, not their semantic cause.",
+    "Token and script flags are overlapping diagnostics; inspect sampled pairs before assigning causes.",
+    "The TSV samples contain IDs and derived field-overlap features, not raw business text."
+  ]
+}
