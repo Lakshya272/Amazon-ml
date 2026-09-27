@@ -201,4 +201,14 @@
 - **Compute status:** EC2 `m6a.2xlarge` has no GPU. At the measured rate, one pass over ~6.2M S2/S3 records alone projects to roughly 36 hours, before query scoring, so no full CPU retrieval was started. RunPod remains stopped. Dense candidate recall/oracle metrics have not yet been produced.
 - **Model:** Default is `ibm-granite/granite-embedding-278m-multilingual` (278M parameters, Apache-2.0). Compare against `BAAI/bge-m3` only on the same validation IDs and under the same candidate budget. The runner output is standalone; fuse with A...L only after measuring incremental recall and candidate volume on identical S1 IDs.
 
+## EXP-011: Frequency-Capped Address/Name Composite Blocking
+- **Date / commit:** 2026-09-27 / `f7ca1d79a0a3a45d3a0de78c777e663637c88db6`
+- **Validation:** Fixed validation IDs, 50,000 sampled S1 entities (seed 42), 173,509 true links; all 10,320,219 training S2/S3 records indexed. The official test set was not used.
+- **Method:** Added country-scoped H1-H4 composite keys using the first address number, selected normalized address tokens, and the first two business-name tokens. H1/H2/H3/H4 standalone families and their unions with the current A-L implementation were evaluated at posting caps 150 and 300. These caps drop overfull postings; there is no per-S1 top-K cap for these families. See [`experiments/exp_011_h_composite_blocking/README.md`](experiments/exp_011_h_composite_blocking/README.md) for the precise positional key definitions.
+- **Best candidate ceiling:** `A-L+H1-4@300` reached 93.02% link recall, 0.9732 oracle macro F0.5, 82.23% full entity coverage, and 0.87% zero coverage. It produced 12,459,148 candidates (249.18 per S1; median 166, P95 698, P99 1,000, max 1,766). This is a candidate oracle ceiling, not a pair matcher score.
+- **Volume tradeoff:** `A-L+H1-4@150` reached 92.61% recall / 0.9709 oracle with 8,865,398 candidates (177.31 per S1). Raising the cap to 300 added 0.41 points of recall (712 links) at 3,593,750 more candidates. Pair purity at cap 300 was 1.2954%.
+- **Breakdown:** At cap 150, S2/S3 link recall was 93.74%/91.55%; US/India was 95.90%/87.62%. H1 and H4 were the strongest individual additions to A-L, but their overlap and the marginal value of H2/H3 after them remain unmeasured.
+- **Runtime/resources:** EC2 `m6a.2xlarge`, 2,360.68 seconds reported by the script, 39m 52.74s wall time, maximum RSS 27,221,708 KiB (~26.0 GiB), no swap, exit status 0.
+- **Artifacts:** Exact report, JSON, metadata, and full timed log are preserved in [`experiments/exp_011_h_composite_blocking/results_2026-09-27/`](experiments/exp_011_h_composite_blocking/results_2026-09-27/).
+- **Next:** Measure H1+H4 together at caps 150/300, then add H2 or H3 separately. This tests marginal recovery before accepting the high H1-H4 candidate volume. Do not compare this sample directly with older validation reports that used a different sample or code version.
 

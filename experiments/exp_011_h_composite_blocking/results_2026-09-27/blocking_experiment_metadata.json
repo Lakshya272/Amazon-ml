@@ -1,0 +1,53 @@
+{
+  "validation_split_path": "/home/ec2-user/amazon-ml-challenge/outputs/split/val_s1_ids.json",
+  "validation_sample_s1": 50000,
+  "validation_seed": 42,
+  "total_true_links": 173509,
+  "candidate_records_indexed": 10320219,
+  "same_country_pair_space": 268466141538,
+  "max_name_token_df": 80,
+  "baseline_candidates_per_channel_cap": 30,
+  "composite_posting_caps": [
+    150,
+    300
+  ],
+  "composite_index_stats": {
+    "150": {
+      "H1": {
+        "retained_keys": 8080318,
+        "pruned_keys": 5374
+      },
+      "H2": {
+        "retained_keys": 7139868,
+        "pruned_keys": 2532
+      },
+      "H3": {
+        "retained_keys": 5345021,
+        "pruned_keys": 6239
+      },
+      "H4": {
+        "retained_keys": 11082437,
+        "pruned_keys": 13969
+      }
+    },
+    "300": {
+      "H1": {
+        "retained_keys": 8083789,
+        "pruned_keys": 1903
+      },
+      "H2": {
+        "retained_keys": 7141601,
+        "pruned_keys": 799
+      },
+      "H3": {
+        "retained_keys": 5348504,
+        "pruned_keys": 2756
+      },
+      "H4": {
+        "retained_keys": 11090554,
+        "pruned_keys": 5852
+      }
+    }
+  },
+  "runtime_seconds": 2360.68
+}

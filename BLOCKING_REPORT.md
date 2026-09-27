@@ -29,3 +29,7 @@ Where:
 - **E**: Drop-one token name keys (for names $\ge 3$ tokens)
 - **F**: Address component-drop keys (2nd/3rd address tokens)
 - **G**: Sorted neighborhood / prefix key (first 8 chars of normalized name)
+
+## Latest held-out validation frontier (EXP-011)
+
+The full-ground-truth A-G table above remains the historical full-training baseline. The latest fixed-sample result evaluates the current A-L implementation with H1-H4 cross-field composites on 50,000 validation S1s: `A-L+H1-4@150` reached 92.61% link recall / 0.9709 oracle macro F0.5 at 177.31 candidates per S1; `@300` reached 93.02% / 0.9732 at 249.18 candidates per S1. This is an oracle candidate ceiling, not matcher performance. The complete report and run artifacts are in [`experiments/exp_011_h_composite_blocking/results_2026-09-27/`](experiments/exp_011_h_composite_blocking/results_2026-09-27/); full setup and the sampling caveat are in [`EXPERIMENT_JOURNEY.md`](EXPERIMENT_JOURNEY.md).
